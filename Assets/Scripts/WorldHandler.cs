@@ -23,6 +23,15 @@ public class WorldHandler : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.A))
 			foreach(Node node in nodes)
 				node.DebugTrans();
+		if (Input.GetKeyDown (KeyCode.B)) 
+		{
+			print("START: " + nodes[3].name);
+			print("END: " + nodes[4].name);
+			Stack S = findSeq(nodes[4], Dijkstra(nodes[3], false));
+
+			foreach(Node n in S)
+				print(n.name);
+		}
 	}
 
 	private void AssignTransitionsToNodes()
@@ -86,7 +95,7 @@ public class WorldHandler : MonoBehaviour {
 		return prev;
 	}
 
-	public Stack findSeq(Node start, Node destination, Dictionary<Node, Node> prev)
+	public Stack findSeq(Node destination, Dictionary<Node, Node> prev)
 	{
 		Stack S = new Stack();
 		Node u = destination;
