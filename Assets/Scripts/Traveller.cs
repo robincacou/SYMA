@@ -6,7 +6,7 @@ public class Traveller : MonoBehaviour {
 	private Node destination;
 	private Node current;
 	private bool transit;
-	private string[] path;
+	private Stack path;
 
 	// Use this for initialization
 	void Start () {
