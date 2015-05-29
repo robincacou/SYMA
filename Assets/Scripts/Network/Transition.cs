@@ -6,8 +6,8 @@ public class Transition : MonoBehaviour {
 	public Node first;
 	public Node second;
 
-	public uint weight;
-
+	public uint initialWeight;
+	public uint alteredWeight = 0;
 
 	private LineRenderer line;
 

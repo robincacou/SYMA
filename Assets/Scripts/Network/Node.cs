@@ -30,4 +30,9 @@ public class Node : MonoBehaviour {
 		foreach(Transition trans in transitions)
 			print(trans.name);
 	}
+
+	public ArrayList getTransitions()
+	{
+		return transitions;
+	}
 }
