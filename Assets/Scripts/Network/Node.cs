@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Node : MonoBehaviour {
-
+public class Node : MonoBehaviour
+{
 	public TextMesh text;
 
 	private ArrayList transitions;
