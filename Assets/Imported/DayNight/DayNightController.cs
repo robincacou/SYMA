@@ -19,7 +19,7 @@ public class DayNightController : MonoBehaviour
   public float currentTimeOfDay = 0;
 
   // A multiplier other scripts can use to speed up and slow down the passing of time.
-  [HideInInspector]
+  //[HideInInspector]
   public float timeMultiplier = 1f;
 
   // Get the initial intensity of the sun so we remember it.
@@ -85,5 +85,14 @@ public class DayNightController : MonoBehaviour
 
     // Multiply the intensity of the sun according to the time of day.
     sun.intensity = sunInitialIntensity * intensityMultiplier;
+  }
+
+  public void boostSpeed()
+  {
+    timeMultiplier *= 10;
+  }
+  public void slowSpeed()
+  {
+    timeMultiplier /= 10;
   }
 }
