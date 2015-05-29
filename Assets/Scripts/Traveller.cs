@@ -3,9 +3,10 @@ using System.Collections;
 
 public class Traveller : MonoBehaviour {
 
-	public Node destination;
-	public Node current;
-	public bool transit;
+	private Node destination;
+	private Node current;
+	private bool transit;
+	private Stack path;
 
 	// Use this for initialization
 	void Start () {
