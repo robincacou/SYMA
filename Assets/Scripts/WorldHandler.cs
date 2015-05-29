@@ -67,9 +67,12 @@ public class WorldHandler : MonoBehaviour {
 
 			foreach(Transition t in u.getTransitions())
 			{
-				if (u == t.second)
-					continue;
-				Node v = t.second; // where v is still in Q.
+				Node v;
+				if (u == t.first)
+					v = t.second; // where v is still in Q.
+				else
+					v = t.first;
+
 				uint alt = dist[u] + t.initialWeight;
 				if(updateOn)
 					alt += t.alteredWeight;
