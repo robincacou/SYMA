@@ -22,8 +22,9 @@ public class Transition : MonoBehaviour {
 		text.text = "" + initialWeight;
 		text.transform.position = Vector3.Lerp(first.transform.position, second.transform.position, 0.5f);
 	}
-	
-	// Update is called once per frame
+
+	// TODO When weight changes, update the text
+
 	void Update () {
 	
 	}

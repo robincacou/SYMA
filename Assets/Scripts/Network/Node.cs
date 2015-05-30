@@ -10,7 +10,7 @@ public class Node : MonoBehaviour
 	void Awake()
 	{
 		transitions = new ArrayList();
-		text.text = "Node: " + name;
+		text.text = name;
 	}
 
 	void Update()
@@ -31,7 +31,7 @@ public class Node : MonoBehaviour
 			print(trans.name);
 	}
 
-	public ArrayList getTransitions()
+	public ArrayList GetTransitions()
 	{
 		return transitions;
 	}

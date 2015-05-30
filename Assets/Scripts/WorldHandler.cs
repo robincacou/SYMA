@@ -74,7 +74,7 @@ public class WorldHandler : MonoBehaviour {
 			// Source node in first case
 			Q.Remove(u);
 
-			foreach(Transition t in u.getTransitions())
+			foreach(Transition t in u.GetTransitions())
 			{
 				Node v;
 				if (u == t.first)

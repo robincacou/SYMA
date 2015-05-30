@@ -73,6 +73,6 @@ public class Transport : MonoBehaviour {
 		if (currentTrans == null)
 			Debug.LogError("NO VALID TRANSITION for " + name);
 		
-		speed = currentTrans.weight;
+		speed = currentTrans.initialWeight; // + alteredWeight
 	}
 }
