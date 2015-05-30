@@ -10,7 +10,7 @@ public class WorldHandler : MonoBehaviour {
 	private Node[] nodes;
 	private Transition[] transitions;
 
-	void Start ()
+	void Start()
 	{
 		nodes = NodesGO.GetComponentsInChildren<Node>();
 		transitions = TransitionsGO.GetComponentsInChildren<Transition>();
@@ -20,7 +20,7 @@ public class WorldHandler : MonoBehaviour {
 
 	void Update ()
 	{
-		if (Input.GetKeyDown(KeyCode.A))
+		if (Input.GetKeyDown(KeyCode.P))
 			foreach(Node node in nodes)
 				node.DebugTrans();
 		if (Input.GetKeyDown (KeyCode.B)) 
