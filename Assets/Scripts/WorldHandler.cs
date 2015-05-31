@@ -7,7 +7,7 @@ public class WorldHandler : MonoBehaviour {
 	public GameObject NodesGO;
 	public GameObject TransitionsGO;
 
-	public GameObject TravellerPrefab;
+	public Traveller TravellerPrefab;
 	public GameObject TravellersContainer;
 
 	private Node[] nodes;
@@ -119,8 +119,17 @@ public class WorldHandler : MonoBehaviour {
 	private void SpawnTraveller()
 	{
 		int index = Random.Range(0, nodes.Length);
-		GameObject traveller = (GameObject)Instantiate(TravellerPrefab, nodes[index].transform.position, Quaternion.identity);
-		traveller.transform.parent = TravellersContainer.transform;
-		travellers.Add(traveller);
+		Traveller trav = (Traveller)Instantiate(TravellerPrefab, nodes[index].transform.position, Quaternion.identity);
+		trav.gameObject.transform.parent = TravellersContainer.transform;
+
+		trav.SetCurrent(nodes[index]);
+		int destination = Random.Range(0, nodes.Length - 1);
+		if (destination >= index)
+			destination++;
+		trav.SetDestination(nodes[destination]);
+
+		trav.Print(); // TODO REMOVE
+
+		travellers.Add(trav);
 	}
 }

@@ -17,4 +17,19 @@ public class Traveller : MonoBehaviour {
 	void Update () {
 	
 	}
+
+	public void SetDestination(Node dest)
+	{
+		destination = dest;
+	}
+
+	public void SetCurrent(Node cur)
+	{
+		current = cur;
+	}
+
+	public void Print()
+	{
+		print("Traveller: Current = " + current + ", Destination = " + destination);
+	}
 }
