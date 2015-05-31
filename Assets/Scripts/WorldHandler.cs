@@ -116,7 +116,7 @@ public class WorldHandler : MonoBehaviour {
 		return S;
 	}
 
-	private void SpawnTraveller()
+	public void SpawnTraveller()
 	{
 		int index = Random.Range(0, nodes.Length);
 		Traveller trav = (Traveller)Instantiate(TravellerPrefab, nodes[index].transform.position, Quaternion.identity);
