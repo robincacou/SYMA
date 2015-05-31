@@ -8,11 +8,13 @@ public class Node : MonoBehaviour
 	private ArrayList transitions;
 	public ArrayList travellers;
 	public uint capacity = 5;
+	private Vector2 posOfNextTraveller;
 
 	void Awake()
 	{
 		transitions = new ArrayList();
 		travellers = new ArrayList ();
+		posOfNextTraveller = new Vector2 (0, 0);
 		text.text = name;
 	}
 
@@ -37,5 +39,16 @@ public class Node : MonoBehaviour
 	public ArrayList GetTransitions()
 	{
 		return transitions;
+	}
+
+	public Vector2 GetPosOfNextTraveller()
+	{
+		return posOfNextTraveller;
+	}
+
+	public void SetPosOfNextTraveller(float x, float y)
+	{
+		posOfNextTraveller.x = x;
+		posOfNextTraveller.y = y;
 	}
 }

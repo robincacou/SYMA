@@ -129,17 +129,35 @@ public class WorldHandler : MonoBehaviour {
 		trav.SetDestination(nodes[destination]);
 
 		trav.Print(); // TODO REMOVE
-		trav.transform.position = new Vector3 (curr.transform.position.x + Random.Range (-curr.capacity/2, curr.capacity/2), 5,
-		                                       curr.transform.position.z + Random.Range (-curr.capacity/2, curr.capacity/2));
+		
+		Vector2 p = curr.GetPosOfNextTraveller ();
+
 		if (curr.travellers.Count != 0)
 			trav.transform.localScale = ((Traveller) curr.travellers[0]).transform.localScale;
+
+		trav.transform.position = new Vector3 (curr.transform.position.x + 5 +  p.x * trav.transform.localScale.x * 2, 5,
+		                                       curr.transform.position.z + p.y * trav.transform.localScale.y * 2);
+
+		if (p.x < Mathf.Sqrt(curr.capacity) - 1)
+			curr.SetPosOfNextTraveller (p.x + 1, p.y);
+		else
+			curr.SetPosOfNextTraveller (0, p.y + 1);
+
 		//travellers.Add(trav);
 		curr.travellers.Add (trav);
 		if (curr.travellers.Count > curr.capacity / trav.transform.localScale.x)
 		{
+			curr.SetPosOfNextTraveller(0, 0);
 			foreach(Traveller t in curr.travellers)
 			{
+				p = curr.GetPosOfNextTraveller ();
 				t.transform.localScale = new Vector3(t.transform.localScale.x / 2, t.transform.localScale.y / 2, t.transform.localScale.z / 2);
+				t.transform.position = new Vector3 (curr.transform.position.x + 5 +  p.x * t.transform.localScale.x * 2, 5,
+				                                       curr.transform.position.z + p.y * t.transform.localScale.y * 2);
+				if (p.x < Mathf.Sqrt(curr.capacity) - 1)
+					curr.SetPosOfNextTraveller (p.x + 1, p.y);
+				else
+					curr.SetPosOfNextTraveller (0, p.y + 1);
 			}
 		}
 	}
