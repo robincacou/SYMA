@@ -121,15 +121,15 @@ public class WorldHandler : MonoBehaviour {
 		int index = Random.Range(0, nodes.Length);
 		Traveller trav = (Traveller)Instantiate(TravellerPrefab, nodes[index].transform.position, Quaternion.identity);
 		trav.gameObject.transform.parent = TravellersContainer.transform;
-
-		trav.SetCurrent(nodes[index]);
+		Node curr = nodes[index];
+		trav.SetCurrent(curr);
 		int destination = Random.Range(0, nodes.Length - 1);
 		if (destination >= index)
 			destination++;
 		trav.SetDestination(nodes[destination]);
 
 		trav.Print(); // TODO REMOVE
-
+		trav.transform.position = new Vector3 (curr.transform.position.x + Random.Range (-curr.capacity, curr.capacity), 5, curr.transform.position.z + Random.Range (-curr.capacity, curr.capacity));
 		travellers.Add(trav);
 	}
 }
