@@ -6,11 +6,13 @@ public class Node : MonoBehaviour
 	public TextMesh text;
 
 	private ArrayList transitions;
-	public uint capacity = 10;
+	public ArrayList travellers;
+	public uint capacity = 5;
 
 	void Awake()
 	{
 		transitions = new ArrayList();
+		travellers = new ArrayList ();
 		text.text = name;
 	}
 

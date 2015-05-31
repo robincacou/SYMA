@@ -129,7 +129,18 @@ public class WorldHandler : MonoBehaviour {
 		trav.SetDestination(nodes[destination]);
 
 		trav.Print(); // TODO REMOVE
-		trav.transform.position = new Vector3 (curr.transform.position.x + Random.Range (-curr.capacity, curr.capacity), 5, curr.transform.position.z + Random.Range (-curr.capacity, curr.capacity));
-		travellers.Add(trav);
+		trav.transform.position = new Vector3 (curr.transform.position.x + Random.Range (-curr.capacity/2, curr.capacity/2), 5,
+		                                       curr.transform.position.z + Random.Range (-curr.capacity/2, curr.capacity/2));
+		if (curr.travellers.Count != 0)
+			trav.transform.localScale = ((Traveller) curr.travellers[0]).transform.localScale;
+		//travellers.Add(trav);
+		curr.travellers.Add (trav);
+		if (curr.travellers.Count > curr.capacity / trav.transform.localScale.x)
+		{
+			foreach(Traveller t in curr.travellers)
+			{
+				t.transform.localScale = new Vector3(t.transform.localScale.x / 2, t.transform.localScale.y / 2, t.transform.localScale.z / 2);
+			}
+		}
 	}
 }
