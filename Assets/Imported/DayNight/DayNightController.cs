@@ -22,11 +22,21 @@ public class DayNightController : MonoBehaviour
   //[HideInInspector]
   public float timeMultiplier = 1f;
 
+	public WorldHandler word;
+
+	public int minutesForTraveller = 5;
+	private int curMinutesForTraveller;
+
+	private float currentHour;
+	private float currentMinute;
+
+
   // Get the initial intensity of the sun so we remember it.
   float sunInitialIntensity;
   void Start()
   {
     sunInitialIntensity = sun.intensity;
+		curMinutesForTraveller = minutesForTraveller;
   }
 
   void Update()
@@ -42,6 +52,12 @@ public class DayNightController : MonoBehaviour
     {
       currentTimeOfDay = 0;
     }
+	
+		int oldMinute = (int)currentMinute;
+	currentHour = 24 * currentTimeOfDay;
+	currentMinute = 60 * (currentHour - Mathf.Floor(currentHour));
+		if (oldMinute != (int)currentMinute)
+			Tick((int)currentMinute - oldMinute);
   }
 
   void UpdateSun()
@@ -87,6 +103,16 @@ public class DayNightController : MonoBehaviour
     sun.intensity = sunInitialIntensity * intensityMultiplier;
   }
 
+	public float GetCurrentMinute()
+	{
+		return currentMinute;
+	}
+
+	public float GetCurrentHour()
+	{
+		return currentHour;
+	}
+
   public void boostSpeed()
   {
     timeMultiplier *= 10;
@@ -95,4 +121,14 @@ public class DayNightController : MonoBehaviour
   {
     timeMultiplier /= 10;
   }
+
+	private void Tick(int minutes)
+	{
+		curMinutesForTraveller -= minutes;
+		if (curMinutesForTraveller < 0)
+		{
+			word.SpawnTraveller();
+			curMinutesForTraveller = minutesForTraveller;
+		}
+	}
 }
