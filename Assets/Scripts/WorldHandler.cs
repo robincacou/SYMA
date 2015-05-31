@@ -7,11 +7,16 @@ public class WorldHandler : MonoBehaviour {
 	public GameObject NodesGO;
 	public GameObject TransitionsGO;
 
+	public GameObject TravellerPrefab;
+	public GameObject TravellersContainer;
+
 	private Node[] nodes;
 	private Transition[] transitions;
+	private ArrayList travellers;
 
 	void Start()
 	{
+		travellers = new ArrayList();
 		nodes = NodesGO.GetComponentsInChildren<Node>();
 		transitions = TransitionsGO.GetComponentsInChildren<Transition>();
 
@@ -20,6 +25,10 @@ public class WorldHandler : MonoBehaviour {
 
 	void Update ()
 	{
+		if (Input.GetKeyDown(KeyCode.T))
+			SpawnTraveller();
+
+		// DEBUG
 		if (Input.GetKeyDown(KeyCode.P))
 			foreach(Node node in nodes)
 				node.DebugTrans();
@@ -105,5 +114,13 @@ public class WorldHandler : MonoBehaviour {
 			u = prev[u];                         // Traverse from target to source
 		}
 		return S;
+	}
+
+	private void SpawnTraveller()
+	{
+		int index = Random.Range(0, nodes.Length);
+		GameObject traveller = (GameObject)Instantiate(TravellerPrefab, nodes[index].transform.position, Quaternion.identity);
+		traveller.transform.parent = TravellersContainer.transform;
+		travellers.Add(traveller);
 	}
 }
