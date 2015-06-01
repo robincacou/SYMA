@@ -91,7 +91,7 @@ public class Transport : MonoBehaviour {
 
 				foreach(Traveller t in travellersToEmbark)
 				{
-					current.RemoveTraveller(t);
+					t.OnEmbark();
 					travellers.Add(t);
 				}
 

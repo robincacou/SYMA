@@ -36,12 +36,9 @@ public class Traveller : MonoBehaviour {
 	public bool StayInTransport(Node curr, Node next)
 	{
 		path.Pop();
-		if (path.Count != 0 && (Node)path.Peek() == next)
-		{
-			current = curr;
-			return true;
-		}
 		current = curr;
+		if (path.Count != 0 && (Node)path.Peek() == next)
+			return true;
 		transit = false;
 		mesh.enabled = true;
 		return false;
@@ -56,6 +53,11 @@ public class Traveller : MonoBehaviour {
 		}
 		else
 			current.AddTraveller (this);
+	}
+
+	public void OnEmbark()
+	{
+		current.RemoveTraveller (this);
 	}
 
 	public bool ShouldIGoInThisTransport(Node next)
