@@ -9,10 +9,12 @@ public class WorldHandler : MonoBehaviour {
 
 	public Traveller TravellerPrefab;
 	public GameObject TravellersContainer;
+	public uint capacity;
 
 	private Node[] nodes;
 	private Transition[] transitions;
 	private ArrayList travellers;
+	private Dictionary<Node, Dictionary<Node, Node>> UnAlteredPaths;
 
 	void Start()
 	{
@@ -21,6 +23,11 @@ public class WorldHandler : MonoBehaviour {
 		transitions = TransitionsGO.GetComponentsInChildren<Transition>();
 
 		AssignTransitionsToNodes();
+
+		UnAlteredPaths = new Dictionary<Node, Dictionary<Node, Node>> ();
+
+		foreach (Node node in nodes)
+			UnAlteredPaths[node] = Dijkstra(node, false);
 	}
 
 	void Update ()
@@ -138,14 +145,16 @@ public class WorldHandler : MonoBehaviour {
 		trav.transform.position = new Vector3 (curr.transform.position.x + 2 +  p.x * trav.transform.localScale.x * 2, 5,
 		                                       curr.transform.position.z + p.y * trav.transform.localScale.y * 2);
 
-		if (p.x < Mathf.Sqrt(curr.capacity) - 1)
+		if (p.x < Mathf.Sqrt(capacity) - 1)
 			curr.SetPosOfNextTraveller (p.x + 1, p.y);
 		else
 			curr.SetPosOfNextTraveller (0, p.y + 1);
 
 		//travellers.Add(trav);
+		trav.SetStack((Stack) findSeq(trav.GetDestination(), UnAlteredPaths[trav.GetCurrent()]));
 		curr.travellers.Add (trav);
-		if (curr.travellers.Count > curr.capacity / trav.transform.localScale.x)
+
+		if (curr.travellers.Count > capacity / trav.transform.localScale.x)
 		{
 			curr.SetPosOfNextTraveller(0, 0);
 			foreach(Traveller t in curr.travellers)
@@ -154,7 +163,7 @@ public class WorldHandler : MonoBehaviour {
 				t.transform.localScale = new Vector3(t.transform.localScale.x / 2, t.transform.localScale.y / 2, t.transform.localScale.z / 2);
 				t.transform.position = new Vector3 (curr.transform.position.x + 2 +  p.x * t.transform.localScale.x * 2, 5,
 				                                       curr.transform.position.z + p.y * t.transform.localScale.y * 2);
-				if (p.x < Mathf.Sqrt(curr.capacity) - 1)
+				if (p.x < Mathf.Sqrt(capacity) - 1)
 					curr.SetPosOfNextTraveller (p.x + 1, p.y);
 				else
 					curr.SetPosOfNextTraveller (0, p.y + 1);

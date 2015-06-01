@@ -30,4 +30,19 @@ public class Traveller : MonoBehaviour {
 	{
 		print("Traveller: Current = " + current + ", Destination = " + destination);
 	}
+
+	public void SetStack(Stack S)
+	{
+		path = S;
+	}
+
+	public Node GetDestination()
+	{
+		return destination;
+	}
+
+	public Node GetCurrent()
+	{
+		return current;
+	}
 }

@@ -7,7 +7,6 @@ public class Node : MonoBehaviour
 
 	private ArrayList transitions;
 	public ArrayList travellers;
-	public uint capacity = 5;
 	private Vector2 posOfNextTraveller;
 
 	void Awake()
