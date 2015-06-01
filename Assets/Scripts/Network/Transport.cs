@@ -84,7 +84,7 @@ public class Transport : MonoBehaviour
 						travellersToEmbark.Add(t);
 					if (travellers.Count + travellersToEmbark.Count >= capacity)
 					{
-						print("MAX CAPACITY ENCOUNTERED");
+						//print("MAX CAPACITY ENCOUNTERED");
 						break;
 					}
 				}
@@ -97,7 +97,9 @@ public class Transport : MonoBehaviour
 
 			}
 			else
-				print("MAX CAPACITY ENCOUNTERED");
+			{
+				// print("MAX CAPACITY ENCOUNTERED");
+			}
 
 			travellersToEmbark.Clear();
 

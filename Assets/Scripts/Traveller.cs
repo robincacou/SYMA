@@ -48,7 +48,7 @@ public class Traveller : MonoBehaviour {
 	{
 		if (current == destination)
 		{
-			print("ARRIVED AT DESTINATION: " + destination.text.text);
+			FindObjectOfType<WorldHandler>().OnTravellerLeaves();
 			Destroy (this.gameObject);
 		}
 		else

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class WorldHandler : MonoBehaviour {
@@ -11,18 +12,18 @@ public class WorldHandler : MonoBehaviour {
 	public GameObject TravellersContainer;
 	public uint capacity;
 
+	public Text numberOfTravellers;
+
 	private Node[] nodes;
 	private Transition[] transitions;
 	private ArrayList travellers;
 	private Dictionary<Node, Dictionary<Node, Node>> UnAlteredPaths;
 
 	private uint totalTravellersNumber = 0;
-	private GUIText totalTravellersNumberText;
+	private uint currentTravellersNumber = 0;
 
 	void Start()
 	{
-		totalTravellersNumberText = GetComponent<GUIText>();
-
 		nodes = NodesGO.GetComponentsInChildren<Node>();
 		transitions = TransitionsGO.GetComponentsInChildren<Transition>();
 
@@ -37,8 +38,7 @@ public class WorldHandler : MonoBehaviour {
 
 	void Update ()
 	{
-		totalTravellersNumberText.text = "Travellers Spawned : " + totalTravellersNumber;
-
+		numberOfTravellers.text = "Travellers : " + currentTravellersNumber + " / " + totalTravellersNumber;
 
 		// DEBUG
 		if (Input.GetKeyDown(KeyCode.T))
@@ -185,5 +185,11 @@ public class WorldHandler : MonoBehaviour {
 		}*/
 
 		totalTravellersNumber++;
+		currentTravellersNumber++;
+	}
+
+	public void OnTravellerLeaves()
+	{
+		currentTravellersNumber--;
 	}
 }
