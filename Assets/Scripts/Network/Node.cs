@@ -54,7 +54,7 @@ public class Node : MonoBehaviour
 
 	public void AddTraveller(Traveller t)
 	{
-		Vector2 p = posOfNextTraveller;
+		/*Vector2 p = posOfNextTraveller;
 
 		if (travellers.Count != 0)
 			t.transform.localScale = ((Traveller)travellers [0]).transform.localScale;
@@ -66,16 +66,19 @@ public class Node : MonoBehaviour
 		if (p.x < Mathf.Sqrt(capacity) - 1)
 			SetPosOfNextTraveller (p.x + 1, p.y);
 		else
-			SetPosOfNextTraveller (0, p.y + 1);
+			SetPosOfNextTraveller (0, p.y + 1);*/
 
 		travellers.Add (t);
-		if (travellers.Count > capacity / t.transform.localScale.x)
-			Paint();
+		SetPosOfNextTraveller(0, 0);
+		RePaint ();
+		//if (travellers.Count > capacity / t.transform.localScale.x)
+			//Paint();
 	}
 
 	public void RemoveTraveller(Traveller t)
 	{
 		travellers.Remove(t);
+		SetPosOfNextTraveller(0, 0);
 		if (travellers.Count != 0)
 			RePaint();
 	}
@@ -86,7 +89,7 @@ public class Node : MonoBehaviour
 		foreach(Traveller t in travellers)
 		{
 			Vector2 p = GetPosOfNextTraveller ();
-			t.transform.localScale = new Vector3(t.transform.localScale.x / 2, t.transform.localScale.y / 2, t.transform.localScale.z / 2);
+			//t.transform.localScale = new Vector3(t.transform.localScale.x / 2, t.transform.localScale.y / 2, t.transform.localScale.z / 2);
 			t.transform.position = new Vector3 (transform.position.x + 2 +  p.x * t.transform.localScale.x * 2, 5,
 			                                    transform.position.z + p.y * t.transform.localScale.y * 2);
 			if (p.x < Mathf.Sqrt(capacity) - 1)
@@ -98,10 +101,9 @@ public class Node : MonoBehaviour
 
 	public void RePaint()
 	{
-		SetPosOfNextTraveller(0, 0);
 		Traveller trav = (Traveller)travellers [0];
-		while (travellers.Count > capacity / trav.transform.localScale.x)
-			trav.transform.localScale = new Vector3(trav.transform.localScale.x / 2, trav.transform.localScale.y / 2, trav.transform.localScale.z / 2);
+		//while (travellers.Count > capacity / trav.transform.localScale.x)
+			//trav.transform.localScale = new Vector3(trav.transform.localScale.x / 2, trav.transform.localScale.y / 2, trav.transform.localScale.z / 2);
 
 		foreach(Traveller t in travellers)
 		{

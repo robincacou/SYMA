@@ -168,7 +168,7 @@ public class WorldHandler : MonoBehaviour {
 		trav.SetStack((Stack) findSeq(trav.GetDestination(), UnAlteredPaths[trav.GetCurrent()]));
 		curr.travellers.Add (trav);
 
-		if (curr.travellers.Count > capacity / trav.transform.localScale.x)
+		/*if (curr.travellers.Count > capacity / trav.transform.localScale.x)
 		{
 			curr.SetPosOfNextTraveller(0, 0);
 			foreach(Traveller t in curr.travellers)
@@ -182,7 +182,7 @@ public class WorldHandler : MonoBehaviour {
 				else
 					curr.SetPosOfNextTraveller (0, p.y + 1);
 			}
-		}
+		}*/
 
 		totalTravellersNumber++;
 	}
