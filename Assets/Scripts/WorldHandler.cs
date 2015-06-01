@@ -23,6 +23,7 @@ public class WorldHandler : MonoBehaviour {
 		transitions = TransitionsGO.GetComponentsInChildren<Transition>();
 
 		AssignTransitionsToNodes();
+		AssignCapacityToNodes ();
 
 		UnAlteredPaths = new Dictionary<Node, Dictionary<Node, Node>> ();
 
@@ -56,7 +57,15 @@ public class WorldHandler : MonoBehaviour {
 		{
 			trans.first.AddTransition(trans);
 			trans.second.AddTransition(trans);
-		}
+		}		
+	}
+
+	private void AssignCapacityToNodes()
+	{
+		foreach(Node node in nodes)
+		{
+			node.SetCapacity(capacity);
+		}		
 	}
 
 	public Dictionary<Node, Node> Dijkstra(Node start, bool updateOn)
@@ -136,7 +145,8 @@ public class WorldHandler : MonoBehaviour {
 		trav.SetDestination(nodes[destination]);
 
 		trav.Print(); // TODO REMOVE
-		
+
+
 		Vector2 p = curr.GetPosOfNextTraveller ();
 
 		if (curr.travellers.Count != 0)
