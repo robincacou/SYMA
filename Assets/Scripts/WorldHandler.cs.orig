@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -13,11 +13,14 @@ public class WorldHandler : MonoBehaviour {
 
 	private Node[] nodes;
 	private Transition[] transitions;
-	private ArrayList travellers;
-	private Dictionary<Node, Dictionary<Node, Node>> UnAlteredPaths;
+<<<<<<< HEAD
 
 	private uint totalTravellersNumber = 0;
 	private GUIText totalTravellersNumberText;
+=======
+	private ArrayList travellers;
+	private Dictionary<Node, Dictionary<Node, Node>> UnAlteredPaths;
+>>>>>>> f40e365bdfad6a9e6f108e59f35e3896f008b575
 
 	void Start()
 	{
