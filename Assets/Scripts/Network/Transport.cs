@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Transport : MonoBehaviour {
-
+public class Transport : MonoBehaviour
+{
 	public Node[] Journey;
 
 	private int currentId;
