@@ -19,10 +19,11 @@ public class DayNightController : MonoBehaviour
   public float currentTimeOfDay = 0;
 
   // A multiplier other scripts can use to speed up and slow down the passing of time.
-  //[HideInInspector]
+  [HideInInspector]
   public float timeMultiplier = 1f;
+	public float globalTimeMultiplier = 0.1f;
 
-	public WorldHandler word;
+	public WorldHandler world;
 
 	private int minutesForTraveller = 5;
 	private int curMinutesForTraveller;
@@ -37,8 +38,11 @@ public class DayNightController : MonoBehaviour
   float sunInitialIntensity;
   void Start()
   {
+	timeMultiplier = globalTimeMultiplier * Mathf.Exp(1);
+	world.setTimeMultiplier(timeMultiplier);
+
     sunInitialIntensity = sun.intensity;
-		curMinutesForTraveller = minutesForTraveller;
+	curMinutesForTraveller = minutesForTraveller;
   }
 
   void Update()
@@ -63,7 +67,7 @@ public class DayNightController : MonoBehaviour
 	
 	minutesSinceTick += 60 * ((24 * (totalTime - oldTime)) - Mathf.Floor(totalTime - oldTime));
 	
-		if (minutesSinceTick >= 1f)
+	if (minutesSinceTick >= 1f)
 	{
 		Tick((int)Mathf.Floor(minutesSinceTick));
 		minutesSinceTick -= Mathf.Floor(minutesSinceTick);
@@ -135,9 +139,12 @@ public class DayNightController : MonoBehaviour
 	public void setMultiplier(float mult)
 	{
 		if (mult == 0)
-			timeMultiplier = 0f;
+			mult = 0f;
 		else
-			timeMultiplier = 0.2f * Mathf.Exp(mult);
+			mult = globalTimeMultiplier * Mathf.Exp(mult);
+		timeMultiplier = mult;
+
+		world.setTimeMultiplier(mult);
 	}
 
 	public void setSpawnRate(float rate)
@@ -150,7 +157,7 @@ public class DayNightController : MonoBehaviour
 		curMinutesForTraveller -= minutes;
 		if (curMinutesForTraveller < 0)
 		{
-			word.SpawnTraveller();
+			world.SpawnTraveller();
 			curMinutesForTraveller = minutesForTraveller;
 		}
 	}

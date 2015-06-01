@@ -7,6 +7,7 @@ public class WorldHandler : MonoBehaviour {
 
 	public GameObject NodesGO;
 	public GameObject TransitionsGO;
+	public GameObject TransportsGO;
 
 	public Traveller TravellerPrefab;
 	public GameObject TravellersContainer;
@@ -16,17 +17,23 @@ public class WorldHandler : MonoBehaviour {
 
 	private Node[] nodes;
 	private Transition[] transitions;
+	private Transport[] transports;
 	private ArrayList travellers;
 	private Dictionary<Node, Dictionary<Node, Node>> UnAlteredPaths;
 
+	private float timeMultiplier = 0f;
 	private uint totalTravellersNumber = 0;
 	private uint currentTravellersNumber = 0;
 
-	void Start()
+	void Awake()
 	{
 		nodes = NodesGO.GetComponentsInChildren<Node>();
 		transitions = TransitionsGO.GetComponentsInChildren<Transition>();
+		transports = TransportsGO.GetComponentsInChildren<Transport>();
+	}
 
+	void Start()
+	{
 		AssignTransitionsToNodes();
 		AssignCapacityToNodes ();
 
@@ -191,5 +198,12 @@ public class WorldHandler : MonoBehaviour {
 	public void OnTravellerLeaves()
 	{
 		currentTravellersNumber--;
+	}
+
+	public void setTimeMultiplier(float mult)
+	{
+		timeMultiplier = mult;
+		foreach(Transport trans in transports)
+			trans.setTimeMultiplier(mult);
 	}
 }
