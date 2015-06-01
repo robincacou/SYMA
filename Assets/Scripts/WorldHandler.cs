@@ -12,11 +12,14 @@ public class WorldHandler : MonoBehaviour {
 
 	private Node[] nodes;
 	private Transition[] transitions;
-	private ArrayList travellers;
+
+	private uint totalTravellersNumber = 0;
+	private GUIText totalTravellersNumberText;
 
 	void Start()
 	{
-		travellers = new ArrayList();
+		totalTravellersNumberText = GetComponent<GUIText>();
+
 		nodes = NodesGO.GetComponentsInChildren<Node>();
 		transitions = TransitionsGO.GetComponentsInChildren<Transition>();
 
@@ -25,10 +28,12 @@ public class WorldHandler : MonoBehaviour {
 
 	void Update ()
 	{
-		if (Input.GetKeyDown(KeyCode.T))
-			SpawnTraveller();
+		totalTravellersNumberText.text = "Travellers Spawned : " + totalTravellersNumber;
+
 
 		// DEBUG
+		if (Input.GetKeyDown(KeyCode.T))
+			SpawnTraveller();
 		if (Input.GetKeyDown(KeyCode.P))
 			foreach(Node node in nodes)
 				node.DebugTrans();
@@ -128,7 +133,7 @@ public class WorldHandler : MonoBehaviour {
 			destination++;
 		trav.SetDestination(nodes[destination]);
 
-		trav.Print(); // TODO REMOVE
+		// trav.Print();
 		
 		Vector2 p = curr.GetPosOfNextTraveller ();
 
@@ -160,5 +165,7 @@ public class WorldHandler : MonoBehaviour {
 					curr.SetPosOfNextTraveller (0, p.y + 1);
 			}
 		}
+
+		totalTravellersNumber++;
 	}
 }
