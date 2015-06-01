@@ -27,6 +27,8 @@ public class DayNightController : MonoBehaviour
 	public int minutesForTraveller = 5;
 	private int curMinutesForTraveller;
 
+	private float totalTime = 0f;
+	private float minutesSinceTick = 0f;
 	private float currentHour;
 	private float currentMinute;
 
@@ -43,9 +45,12 @@ public class DayNightController : MonoBehaviour
   {
     // Updates the sun's rotation and intensity according to the current time of day.
     UpdateSun();
+		
+	float oldTime = totalTime;
 
     // This makes currentTimeOfDay go from 0 to 1 in the number of seconds we've specified.
     currentTimeOfDay += (Time.deltaTime / secondsInFullDay) * timeMultiplier;
+	totalTime += (Time.deltaTime / secondsInFullDay) * timeMultiplier;
 
     // If currentTimeOfDay is 1 (midnight) set it to 0 again so we start a new day.
     if (currentTimeOfDay >= 1)
@@ -53,11 +58,16 @@ public class DayNightController : MonoBehaviour
       currentTimeOfDay = 0;
     }
 	
-		int oldMinute = (int)currentMinute;
 	currentHour = 24 * currentTimeOfDay;
 	currentMinute = 60 * (currentHour - Mathf.Floor(currentHour));
-		if (oldMinute != (int)currentMinute)
-			Tick((int)currentMinute - oldMinute);
+	
+	minutesSinceTick += 60 * ((24 * (totalTime - oldTime)) - Mathf.Floor(totalTime - oldTime));
+	
+		if (minutesSinceTick >= 1f)
+	{
+		Tick((int)Mathf.Floor(minutesSinceTick));
+		minutesSinceTick -= Mathf.Floor(minutesSinceTick);
+	}
   }
 
   void UpdateSun()
