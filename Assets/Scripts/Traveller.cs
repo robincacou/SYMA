@@ -9,6 +9,7 @@ public class Traveller : MonoBehaviour {
 	private Node current;
 	private bool transit;
 	private Stack path;
+	private uint waitingTime;
 
 	// Use this for initialization
 	void Start () {
@@ -58,6 +59,7 @@ public class Traveller : MonoBehaviour {
 
 	public void OnEmbark()
 	{
+		waitingTime = 0;
 		current.RemoveTraveller (this);
 	}
 
@@ -70,6 +72,12 @@ public class Traveller : MonoBehaviour {
 			return true;
 		}
 		return false;
+	}
+
+	public void CheckingWaitingTime(Transition t)
+	{
+		++waitingTime;
+		path = FindObjectOfType<WorldHandler> ().AssignNewWaitingPath (current, destination, waitingTime, current.informationOn, t);
 	}
 
 	public void SetStack(Stack S)
@@ -91,4 +99,16 @@ public class Traveller : MonoBehaviour {
 	{
 		return path;
 	}
+
+	public void SetWaitingTime(uint i)
+	{
+		waitingTime = i;
+	}
+
+	public uint GetWaitingTime()
+	{
+		return waitingTime;
+	}
+
+
 }

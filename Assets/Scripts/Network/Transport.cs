@@ -81,6 +81,7 @@ public class Transport : MonoBehaviour
 
 			//EMBARK
 			ArrayList travellersToEmbark = new ArrayList();
+			bool capaEncountered = false;
 			if (travellers.Count < capacity)
 			{
 				foreach(Traveller t in current.GetTravellers())
@@ -90,6 +91,7 @@ public class Transport : MonoBehaviour
 					if (travellers.Count + travellersToEmbark.Count >= capacity)
 					{
 						//print("MAX CAPACITY ENCOUNTERED");
+						capaEncountered = true;
 						break;
 					}
 				}
@@ -103,12 +105,26 @@ public class Transport : MonoBehaviour
 			}
 			else
 			{
+				capaEncountered = true;
 				// print("MAX CAPACITY ENCOUNTERED");
 			}
 
 			travellersToEmbark.Clear();
 
 			UpdateTransAndSpeed();
+
+
+			if (capaEncountered)
+			{
+				/*foreach(Traveller t in current.GetTravellers())
+				{
+					if (t.GetStack().Peek() == destination)
+					{
+						t.CheckingWaitingTime(currentTrans);
+					}
+				}*/
+			}
+
 		}
 	}
 

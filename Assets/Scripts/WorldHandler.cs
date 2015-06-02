@@ -42,7 +42,6 @@ public class WorldHandler : MonoBehaviour {
 		UnAlteredPaths = new Dictionary<Node, Dictionary<Node, Node>> ();
 		AlteredPaths = new Dictionary<Node, Dictionary<Node, Node>> ();
 
-
 		foreach (Node node in nodes)
 		{
 			if (node.informationOn)
@@ -234,4 +233,64 @@ public class WorldHandler : MonoBehaviour {
 		foreach(Transport trans in transports)
 			trans.setTimeMultiplier(mult);
 	}
+
+	public Dictionary<Node, Node> SpecialDijkstra(Node start, bool updateOn, Transition trans, uint waitingTime)
+	{
+		Dictionary<Node, uint> dist = new Dictionary<Node, uint>();
+		Dictionary<Node, Node> prev = new Dictionary<Node, Node>();
+		ArrayList Q = new ArrayList();
+		
+		dist[start] = 0;                       // Distance from source to source
+		prev[start] = null;               // Previous node in optimal path initialization
+		
+		
+		foreach(Node v in nodes)  // Initialization
+		{
+			if (v != start)            // Where v has not yet been removed from Q (unvisited nodes)
+			{
+				dist[v] = 600000;             // Unknown distance function from source to v
+				prev[v] = null;            	// Previous node in optimal path from source
+			}
+			Q.Add(v); // All nodes initially in Q (unvisited nodes)
+		}
+		
+		while(Q.Count != 0)
+		{
+			Node u = (Node) Q[0];
+			foreach(Node vertex in Q)
+			{
+				if (dist[vertex] < dist[u])
+					u = vertex;
+			}
+			// Source node in first case
+			Q.Remove(u);
+			
+			foreach(Transition t in u.GetTransitions())
+			{
+				Node v;
+				if (u == t.first)
+					v = t.second; // where v is still in Q.
+				else
+					v = t.first;
+				
+				uint alt = dist[u] + t.initialWeight;
+				if(updateOn)
+					alt += t.alteredWeight;
+				if (t == trans)
+					alt += (waitingTime/10) * t.initialWeight;
+				if(alt < dist[v])               // A shorter path to v has been found
+				{
+					dist[v] = alt;
+					prev[v] = u;
+				}
+			}
+		}
+		return prev;
+	}
+
+	public Stack AssignNewWaitingPath(Node start, Node dest, uint wait, bool updateOn, Transition trans)
+	{
+		return findSeq (dest, SpecialDijkstra (start, updateOn, trans, wait));
+	}
+
 }
