@@ -29,5 +29,6 @@ public class SlowTransition : MonoBehaviour
 			print("Healing" + transform.parent.name);
 			trans.Heal();
 		}
+		FindObjectOfType<WorldHandler> ().UpdateWeights ();
 	}
 }

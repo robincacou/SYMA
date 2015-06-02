@@ -19,7 +19,9 @@ public class WorldHandler : MonoBehaviour {
 	private Transition[] transitions;
 	private Transport[] transports;
 	private ArrayList travellers;
+
 	private Dictionary<Node, Dictionary<Node, Node>> UnAlteredPaths;
+	private Dictionary<Node, Dictionary<Node, Node>> AlteredPaths;
 
 	private float timeMultiplier = 0f;
 	private uint totalTravellersNumber = 0;
@@ -38,9 +40,15 @@ public class WorldHandler : MonoBehaviour {
 		AssignCapacityToNodes ();
 
 		UnAlteredPaths = new Dictionary<Node, Dictionary<Node, Node>> ();
+		AlteredPaths = new Dictionary<Node, Dictionary<Node, Node>> ();
+
 
 		foreach (Node node in nodes)
-			UnAlteredPaths[node] = Dijkstra(node, false);
+		{
+			if (node.informationOn)
+				AlteredPaths[node] = Dijkstra(node, true);
+			UnAlteredPaths [node] = Dijkstra (node, false);
+		}
 	}
 
 	void Update ()
@@ -133,7 +141,7 @@ public class WorldHandler : MonoBehaviour {
 		return prev;
 	}
 
-	public Stack findSeq(Node destination, Dictionary<Node, Node> prev)
+	private Stack findSeq(Node destination, Dictionary<Node, Node> prev)
 	{
 		Stack S = new Stack();
 		Node u = destination;
@@ -143,6 +151,23 @@ public class WorldHandler : MonoBehaviour {
 			u = prev[u];                         // Traverse from target to source
 		}
 		return S;
+	}
+
+	public Stack AssignNewPath(Node start, Node dest)
+	{
+		return findSeq (dest, AlteredPaths[start]);
+	}
+
+	public void UpdateWeights()
+	{
+		foreach (Node node in nodes)
+		{
+			if (node.informationOn)
+			{
+				AlteredPaths[node] = Dijkstra(node, true);
+				node.InformTravellers();
+			}
+		}
 	}
 
 	public void SpawnTraveller()
@@ -172,7 +197,10 @@ public class WorldHandler : MonoBehaviour {
 			curr.SetPosOfNextTraveller (0, p.y + 1);
 
 		//travellers.Add(trav);
-		trav.SetStack((Stack) findSeq(trav.GetDestination(), UnAlteredPaths[trav.GetCurrent()]));
+		if (trav.GetCurrent().informationOn)
+			trav.SetStack((Stack) findSeq(trav.GetDestination(), AlteredPaths[trav.GetCurrent()]));
+		else
+			trav.SetStack((Stack) findSeq(trav.GetDestination(), UnAlteredPaths[trav.GetCurrent()]));
 		curr.travellers.Add (trav);
 
 		/*if (curr.travellers.Count > capacity / trav.transform.localScale.x)

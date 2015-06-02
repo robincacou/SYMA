@@ -46,13 +46,14 @@ public class Traveller : MonoBehaviour {
 
 	public void OnTransportArrived()
 	{
-		if (current == destination)
-		{
-			FindObjectOfType<WorldHandler>().OnTravellerLeaves();
+		if (current == destination) {
+			FindObjectOfType<WorldHandler> ().OnTravellerLeaves ();
 			Destroy (this.gameObject);
-		}
-		else
+		} else {
 			current.AddTraveller (this);
+			if (current.informationOn)
+				path = FindObjectOfType<WorldHandler> ().AssignNewPath(current, destination);
+		}
 	}
 
 	public void OnEmbark()
