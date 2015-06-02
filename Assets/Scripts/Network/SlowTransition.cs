@@ -3,10 +3,12 @@ using System.Collections;
 
 public class SlowTransition : MonoBehaviour
 {
+	private Transition trans;
+
 	// Use this for initialization
 	void Start()
 	{
-
+		trans = GetComponentInParent<Transition>();
 	}
 
 	// Update is called once per frame
@@ -17,6 +19,15 @@ public class SlowTransition : MonoBehaviour
 
 	void OnMouseDown()
 	{
-		GetComponentInParent<Transition>().alteredWeight = GetComponentInParent<Transition>().initialWeight * 3;
+		if (trans.alteredWeight == 0)
+		{
+			print("Slowing" + transform.parent.name);
+			trans.SlowDown();
+		}
+		else
+		{
+			print("Healing" + transform.parent.name);
+			trans.Heal();
+		}
 	}
 }
