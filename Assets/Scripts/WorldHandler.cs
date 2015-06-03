@@ -22,6 +22,7 @@ public class WorldHandler : MonoBehaviour {
 
 	private Dictionary<Node, Dictionary<Node, Node>> UnAlteredPaths;
 	private Dictionary<Node, Dictionary<Node, Node>> AlteredPaths;
+	private Dictionary<KeyValuePair<KeyValuePair<Node, Transition>, KeyValuePair<uint, bool>>, Dictionary<Node, Node>> WaitingPaths;
 
 	private float timeMultiplier = 0f;
 	private uint totalTravellersNumber = 0;
@@ -41,6 +42,7 @@ public class WorldHandler : MonoBehaviour {
 
 		UnAlteredPaths = new Dictionary<Node, Dictionary<Node, Node>> ();
 		AlteredPaths = new Dictionary<Node, Dictionary<Node, Node>> ();
+		WaitingPaths = new Dictionary<KeyValuePair<KeyValuePair<Node, Transition>, KeyValuePair<uint, bool>>, Dictionary<Node, Node>> ();
 
 		foreach (Node node in nodes)
 		{
@@ -159,6 +161,7 @@ public class WorldHandler : MonoBehaviour {
 
 	public void UpdateWeights()
 	{
+		WaitingPaths.Clear ();
 		foreach (Node node in nodes)
 		{
 			if (node.informationOn)
@@ -290,7 +293,13 @@ public class WorldHandler : MonoBehaviour {
 
 	public Stack AssignNewWaitingPath(Node start, Node dest, uint wait, bool updateOn, Transition trans)
 	{
-		return findSeq (dest, SpecialDijkstra (start, updateOn, trans, wait));
+		KeyValuePair<Node, Transition> pair1 = new KeyValuePair<Node, Transition> (start, trans);
+		KeyValuePair<uint, bool> pair2 = new KeyValuePair<uint, bool> (wait, updateOn);
+
+		KeyValuePair<KeyValuePair<Node, Transition>, KeyValuePair<uint, bool>> pair = new KeyValuePair<KeyValuePair<Node, Transition>, KeyValuePair<uint, bool>> (pair1, pair2);
+		if (!WaitingPaths.ContainsKey(pair))
+			WaitingPaths [pair] = SpecialDijkstra (start, updateOn, trans, wait);
+		return findSeq (dest, WaitingPaths [pair]);
 	}
 
 }

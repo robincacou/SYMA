@@ -116,13 +116,13 @@ public class Transport : MonoBehaviour
 
 			if (capaEncountered)
 			{
-				/*foreach(Traveller t in current.GetTravellers())
+				foreach(Traveller t in current.GetTravellers())
 				{
 					if (t.GetStack().Peek() == destination)
 					{
 						t.CheckingWaitingTime(currentTrans);
 					}
-				}*/
+				}
 			}
 
 		}
