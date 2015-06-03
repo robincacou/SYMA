@@ -16,12 +16,11 @@ public class Node : MonoBehaviour
 		transitions = new ArrayList();
 		travellers = new ArrayList ();
 		posOfNextTraveller = new Vector2 (0, 0);
-		text.text = name;
 	}
 
 	void Update()
 	{
-	
+		text.text = travellers.Count.ToString();	
 	}
 
 	public void AddTransition(Transition trans)

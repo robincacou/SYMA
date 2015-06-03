@@ -12,7 +12,7 @@ public class WorldHandler : MonoBehaviour {
 	public Traveller TravellerPrefab;
 	public GameObject TravellersContainer;
 	public uint capacity;
-
+	
 	public Text numberOfTravellers;
 
 	private Node[] nodes;
@@ -292,5 +292,4 @@ public class WorldHandler : MonoBehaviour {
 	{
 		return findSeq (dest, SpecialDijkstra (start, updateOn, trans, wait));
 	}
-
 }
