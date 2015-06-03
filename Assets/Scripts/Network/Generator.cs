@@ -40,21 +40,36 @@ public class Generator : MonoBehaviour {
 			Node node = (Node)Nodes[i];
 			ArrayList possibleNeighbors = new ArrayList();
 
-			// TODO ADD DIAGONALS
-			// TODO DO NOT TAKE ALREADY CONNECTED NODES
-
 			// Top
 			if (i - size >= 0)
-				possibleNeighbors.Add(Nodes[i - size]);
-			// Right
-			if ((i % size) != (size - 1))
-				possibleNeighbors.Add(Nodes[i + 1]);
+			{
+				AddNodeIfNotConnected(possibleNeighbors, node, (Node)Nodes[i - size]);
+
+				// Top Right
+				if ((i % size) != (size - 1))
+					AddNodeIfNotConnected(possibleNeighbors, node, (Node)Nodes[i - size + 1]);
+				// Top Left
+				if ((i % size) != 0)
+					AddNodeIfNotConnected(possibleNeighbors, node, (Node)Nodes[i - size - 1]);
+			}
 			// Bottom
 			if (i + size < Nodes.Count)
-				possibleNeighbors.Add(Nodes[i + size]);
+			{
+				AddNodeIfNotConnected(possibleNeighbors, node, (Node)Nodes[i + size]);
+
+				// Bottom Right
+				if ((i % size) != (size - 1))
+					AddNodeIfNotConnected(possibleNeighbors, node, (Node)Nodes[i + size + 1]);
+				// Bottom Left
+				if ((i % size) != 0)
+					AddNodeIfNotConnected(possibleNeighbors, node, (Node)Nodes[i + size - 1]);
+			}
+			// Right
+			if ((i % size) != (size - 1))
+				AddNodeIfNotConnected(possibleNeighbors, node, (Node)Nodes[i + 1]);
 			// Left
 			if ((i % size) != 0)
-				possibleNeighbors.Add(Nodes[i - 1]);
+				AddNodeIfNotConnected(possibleNeighbors, node, (Node)Nodes[i - 1]);
 
 			// Multiple random call and removing items are needed in order to pick random neighbors
 			int neighborNumber = Random.Range(1, possibleNeighbors.Count);
@@ -69,7 +84,20 @@ public class Generator : MonoBehaviour {
 				trans.second = toConnect;
 				trans.initialWeight = (uint)Random.Range(10, 1000);
 				trans.transform.parent = TransitionContainer.transform;
+
+				node.AddTransition(trans);
+				toConnect.AddTransition(trans);
 			}
 		}
+	}
+
+	private void AddNodeIfNotConnected(ArrayList possibleNeighbors, Node current, Node toAdd)
+	{
+		foreach (Transition trans in current.GetTransitions())
+		{
+			if (trans.first == toAdd || trans.second == toAdd)
+				return;
+		}
+		possibleNeighbors.Add(toAdd);
 	}
 }
