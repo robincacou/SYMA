@@ -119,9 +119,7 @@ public class Transport : MonoBehaviour
 				foreach(Traveller t in current.GetTravellers())
 				{
 					if (t.GetStack().Peek() == destination)
-					{
 						t.CheckingWaitingTime(currentTrans);
-					}
 				}
 			}
 

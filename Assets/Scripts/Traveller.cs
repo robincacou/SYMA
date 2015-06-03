@@ -77,7 +77,14 @@ public class Traveller : MonoBehaviour {
 	public void CheckingWaitingTime(Transition t)
 	{
 		++waitingTime;
-		path = FindObjectOfType<WorldHandler> ().AssignNewWaitingPath (current, destination, waitingTime, current.informationOn, t);
+		if (waitingTime % 3 == 0)
+		{
+			Node next = (Node) path.Peek ();
+			path = FindObjectOfType<WorldHandler> ().AssignNewWaitingPath (current, destination, waitingTime, current.informationOn, t);
+
+			if (next != path.Peek())
+				waitingTime = 0;
+		}
 	}
 
 	public void SetStack(Stack S)
