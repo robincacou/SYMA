@@ -18,7 +18,7 @@ public class WorldHandler : MonoBehaviour {
 	private Node[] nodes;
 	private Transition[] transitions;
 	private Transport[] transports;
-	private ArrayList travellers;
+	private ArrayList smartPhonetravellers;
 
 	private Dictionary<Node, Dictionary<Node, Node>> UnAlteredPaths;
 	private Dictionary<Node, Dictionary<Node, Node>> AlteredPaths;
@@ -40,6 +40,7 @@ public class WorldHandler : MonoBehaviour {
 		AssignTransitionsToNodes();
 		AssignCapacityToNodes ();
 
+		smartPhonetravellers = new ArrayList ();
 		UnAlteredPaths = new Dictionary<Node, Dictionary<Node, Node>> ();
 		AlteredPaths = new Dictionary<Node, Dictionary<Node, Node>> ();
 		WaitingPaths = new Dictionary<KeyValuePair<KeyValuePair<Node, Transition>, KeyValuePair<uint, bool>>, Dictionary<Node, Node>> ();
@@ -170,6 +171,12 @@ public class WorldHandler : MonoBehaviour {
 				node.InformTravellers();
 			}
 		}
+
+		foreach(Traveller t in smartPhonetravellers)
+		{
+			t.SetWaitingTime(0);
+			t.SetStack(AssignNewPath(t.GetCurrent(), t.GetDestination()));
+		}
 	}
 
 	public void SpawnTraveller()
@@ -205,21 +212,11 @@ public class WorldHandler : MonoBehaviour {
 			trav.SetStack((Stack) findSeq(trav.GetDestination(), UnAlteredPaths[trav.GetCurrent()]));
 		curr.travellers.Add (trav);
 
-		/*if (curr.travellers.Count > capacity / trav.transform.localScale.x)
+		if (currentTravellersNumber % 5 == 0)
 		{
-			curr.SetPosOfNextTraveller(0, 0);
-			foreach(Traveller t in curr.travellers)
-			{
-				p = curr.GetPosOfNextTraveller ();
-				t.transform.localScale = new Vector3(t.transform.localScale.x / 2, t.transform.localScale.y / 2, t.transform.localScale.z / 2);
-				t.transform.position = new Vector3 (curr.transform.position.x + 2 +  p.x * t.transform.localScale.x * 2, 5,
-				                                       curr.transform.position.z + p.y * t.transform.localScale.y * 2);
-				if (p.x < Mathf.Sqrt(capacity) - 1)
-					curr.SetPosOfNextTraveller (p.x + 1, p.y);
-				else
-					curr.SetPosOfNextTraveller (0, p.y + 1);
-			}
-		}*/
+			trav.SetSmartPhone (true);
+			smartPhonetravellers.Add (trav);
+		}
 
 		totalTravellersNumber++;
 		currentTravellersNumber++;
