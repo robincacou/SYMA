@@ -165,11 +165,9 @@ public class WorldHandler : MonoBehaviour {
 		WaitingPaths.Clear ();
 		foreach (Node node in nodes)
 		{
+			AlteredPaths[node] = Dijkstra(node, true);
 			if (node.informationOn)
-			{
-				AlteredPaths[node] = Dijkstra(node, true);
 				node.InformTravellers();
-			}
 		}
 
 		foreach(Traveller t in smartPhonetravellers)
