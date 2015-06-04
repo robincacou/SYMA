@@ -147,4 +147,9 @@ public class Transport : MonoBehaviour
 	{
 		timeMultiplier = 12 * mult;
 	}
+
+	public void SetCapacity(int cap)
+	{
+		capacity = capacity;
+	}
 }
