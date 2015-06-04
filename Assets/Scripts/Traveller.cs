@@ -40,15 +40,10 @@ public class Traveller : MonoBehaviour {
 	public bool StayInTransport(Node curr, Node next)
 	{
 		current = curr;
+		path.Pop();
 
-		if (smartPhone)
-		{
-			Stack tmppath = FindObjectOfType<WorldHandler> ().AssignNewPath (current, destination);
-			if (tmppath != path) 
-				path = tmppath;
-		}
-		else
-			path.Pop();
+		if (smartPhone && current != destination)
+			path = FindObjectOfType<WorldHandler> ().AssignNewPath (current, destination);
 
 		if (path.Count != 0 && (Node)path.Peek() == next)
 			return true;

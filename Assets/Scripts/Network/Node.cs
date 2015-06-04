@@ -55,8 +55,11 @@ public class Node : MonoBehaviour
 	public void InformTravellers()
 	{
 		foreach (Traveller t in travellers) {
-			t.SetWaitingTime(0);
-			t.SetStack(FindObjectOfType<WorldHandler> ().AssignNewPath(this, t.GetDestination()));
+			if (!t.GetSmartPhone())
+			{
+				t.SetWaitingTime(0);
+				t.SetStack(FindObjectOfType<WorldHandler> ().AssignNewPath(this, t.GetDestination()));
+			}
 		}
 	}
 
