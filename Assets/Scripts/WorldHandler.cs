@@ -95,32 +95,60 @@ public class WorldHandler : MonoBehaviour {
 	{
 		Dictionary<Node, uint> dist = new Dictionary<Node, uint>();
 		Dictionary<Node, Node> prev = new Dictionary<Node, Node>();
-		ArrayList Q = new ArrayList();
+		//ArrayList Q = new ArrayList();
+		SortedList Q2 = new SortedList();
+		ArrayList tmp1 = new ArrayList ();
+		ArrayList tmp2 = new ArrayList ();
+
 
 		dist[start] = 0;                       // Distance from source to source
 		prev[start] = null;               // Previous node in optimal path initialization
-
-
+		
 		foreach(Node v in nodes)  // Initialization
 		{
 			if (v != start)            // Where v has not yet been removed from Q (unvisited nodes)
 			{
 				dist[v] = 600000;             // Unknown distance function from source to v
 				prev[v] = null;            	// Previous node in optimal path from source
+				tmp1.Add(v);
 			}
-			Q.Add(v); // All nodes initially in Q (unvisited nodes)
+			//Q.Add(v); // All nodes initially in Q (unvisited nodes)
 		}
+
+		tmp2.Add (start);
+
+		Q2.Add (600000, tmp1);
+		Q2.Add (0, tmp2);
 					
-		while(Q.Count != 0)
+		while(Q2.Count != 0)
 		{
-			Node u = (Node) Q[0];
+			/*Node u = (Node) Q[0];
 			foreach(Node vertex in Q)
 			{
 				if (dist[vertex] < dist[u])
 					u = vertex;
 			}
 			// Source node in first case
-			Q.Remove(u);
+			Q.Remove(u);*/
+
+			ArrayList tmpList = (ArrayList) Q2.GetByIndex(0);
+			Node u = (Node) tmpList[0];
+
+			/*if (dist[u] != dist[u2])
+			{
+				print("START " + start.name);
+				foreach (Node n in tmpList)
+					print(n.name);
+				print("Error in Queue " + tmpList.Count);
+				print(u.name + " " + dist[u] + " " + u2.name + " " + dist[u2]);
+				print("END");
+			}*/
+
+			if (tmpList.Count == 1)
+				Q2.RemoveAt(0);
+			else
+				tmpList.RemoveAt(0);
+
 
 			foreach(Transition t in u.GetTransitions())
 			{
@@ -135,7 +163,23 @@ public class WorldHandler : MonoBehaviour {
 					alt += t.alteredWeight;
 				if(alt < dist[v])               // A shorter path to v has been found
 				{
+					ArrayList tmpList2 = (ArrayList) Q2[(int)dist[v]];
+					if (tmpList2.Count == 1)
+						Q2.Remove((int)dist[v]);
+					else
+						tmpList2.Remove(v);
+
 					dist[v] = alt;
+
+					if (Q2.ContainsKey((int)dist[v]))
+						((ArrayList) Q2[(int)dist[v]]).Add(v);
+					else
+					{
+						ArrayList temp = new ArrayList();
+						temp.Add(v);
+						Q2.Add((int) dist[v], temp);
+					}
+
 					prev[v] = u;
 				}
 			}
@@ -233,14 +277,17 @@ public class WorldHandler : MonoBehaviour {
 	}
 
 	public Dictionary<Node, Node> SpecialDijkstra(Node start, bool updateOn, Transition trans, uint waitingTime)
-	{
+	{	
 		Dictionary<Node, uint> dist = new Dictionary<Node, uint>();
 		Dictionary<Node, Node> prev = new Dictionary<Node, Node>();
-		ArrayList Q = new ArrayList();
+		//ArrayList Q = new ArrayList();
+		SortedList Q2 = new SortedList();
+		ArrayList tmp1 = new ArrayList ();
+		ArrayList tmp2 = new ArrayList ();
+		
 		
 		dist[start] = 0;                       // Distance from source to source
 		prev[start] = null;               // Previous node in optimal path initialization
-		
 		
 		foreach(Node v in nodes)  // Initialization
 		{
@@ -248,20 +295,27 @@ public class WorldHandler : MonoBehaviour {
 			{
 				dist[v] = 600000;             // Unknown distance function from source to v
 				prev[v] = null;            	// Previous node in optimal path from source
+				tmp1.Add(v);
 			}
-			Q.Add(v); // All nodes initially in Q (unvisited nodes)
+			//Q.Add(v); // All nodes initially in Q (unvisited nodes)
 		}
 		
-		while(Q.Count != 0)
-		{
-			Node u = (Node) Q[0];
-			foreach(Node vertex in Q)
-			{
-				if (dist[vertex] < dist[u])
-					u = vertex;
-			}
-			// Source node in first case
-			Q.Remove(u);
+		tmp2.Add (start);
+		
+		Q2.Add (600000, tmp1);
+		Q2.Add (0, tmp2);
+		
+		while(Q2.Count != 0)
+		{	
+			ArrayList tmpList = (ArrayList) Q2.GetByIndex(0);
+			
+			Node u = (Node) tmpList[0];
+
+			if (tmpList.Count == 1)
+				Q2.RemoveAt(0);
+			else
+				tmpList.RemoveAt(0);
+			
 			
 			foreach(Transition t in u.GetTransitions())
 			{
@@ -276,9 +330,26 @@ public class WorldHandler : MonoBehaviour {
 					alt += t.alteredWeight;
 				if (t == trans)
 					alt += (waitingTime/10) * t.initialWeight;
+
 				if(alt < dist[v])               // A shorter path to v has been found
 				{
+					ArrayList tmpList2 = (ArrayList) Q2[(int)dist[v]];
+					if (tmpList2.Count == 1)
+						Q2.Remove((int)dist[v]);
+					else
+						tmpList2.Remove(v);
+					
 					dist[v] = alt;
+					
+					if (Q2.ContainsKey((int)dist[v]))
+						((ArrayList) Q2[(int)dist[v]]).Add(v);
+					else
+					{
+						ArrayList temp = new ArrayList();
+						temp.Add(v);
+						Q2.Add((int) dist[v], temp);
+					}
+					
 					prev[v] = u;
 				}
 			}
