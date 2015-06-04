@@ -98,4 +98,12 @@ public class Node : MonoBehaviour
 	{
 		capacity = c;
 	}
+
+	public bool HasTransitionTo(Node other)
+	{
+		foreach(Transition trans in transitions)
+			if (trans.first == other || trans.second == other)
+				return true;
+		return false;
+	}
 }

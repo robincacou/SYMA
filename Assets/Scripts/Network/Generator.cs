@@ -46,10 +46,10 @@ public class Generator : MonoBehaviour {
 				AddNodeIfNotConnected(possibleNeighbors, node, (Node)Nodes[i - size]);
 
 				// Top Right
-				if ((i % size) != (size - 1))
+				if (((i % size) != (size - 1)) && !((Node)Nodes[i - size]).HasTransitionTo((Node)Nodes[i + 1]))
 					AddNodeIfNotConnected(possibleNeighbors, node, (Node)Nodes[i - size + 1]);
 				// Top Left
-				if ((i % size) != 0)
+				if ((i % size) != 0 && !((Node)Nodes[i - size]).HasTransitionTo((Node)Nodes[i - 1]))
 					AddNodeIfNotConnected(possibleNeighbors, node, (Node)Nodes[i - size - 1]);
 			}
 			// Bottom
@@ -58,10 +58,10 @@ public class Generator : MonoBehaviour {
 				AddNodeIfNotConnected(possibleNeighbors, node, (Node)Nodes[i + size]);
 
 				// Bottom Right
-				if ((i % size) != (size - 1))
+				if ((i % size) != (size - 1) && !((Node)Nodes[i + size]).HasTransitionTo((Node)Nodes[i + 1]))
 					AddNodeIfNotConnected(possibleNeighbors, node, (Node)Nodes[i + size + 1]);
 				// Bottom Left
-				if ((i % size) != 0)
+				if ((i % size) != 0 && !((Node)Nodes[i + size]).HasTransitionTo((Node)Nodes[i - 1]))
 					AddNodeIfNotConnected(possibleNeighbors, node, (Node)Nodes[i + size - 1]);
 			}
 			// Right
@@ -70,6 +70,9 @@ public class Generator : MonoBehaviour {
 			// Left
 			if ((i % size) != 0)
 				AddNodeIfNotConnected(possibleNeighbors, node, (Node)Nodes[i - 1]);
+
+			if (possibleNeighbors.Count == 0)
+				continue;
 
 			// Multiple random call and removing items are needed in order to pick random neighbors
 			int neighborNumber = Random.Range(1, possibleNeighbors.Count);
