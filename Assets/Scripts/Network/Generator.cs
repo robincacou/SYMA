@@ -92,7 +92,7 @@ public class Generator : MonoBehaviour {
 				Transition trans = (Transition)Instantiate(TransitionPrefab);
 				trans.first = node;
 				trans.second = toConnect;
-				trans.initialWeight = (uint)Random.Range(10, 1000);
+				trans.initialWeight = (uint)Random.Range(10, 400);
 				trans.transform.parent = TransitionContainer.transform;
 
 				node.AddTransition(trans);
