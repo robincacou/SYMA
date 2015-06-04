@@ -3,12 +3,10 @@
 public class Clock : MonoBehaviour
 {
   // A reference to the DayNightController script.
-  DayNightController controller;
+  public DayNightController controller;
 
   void Awake()
   {
-    // Find the DayNightController game object by its name and get the DayNightController script on it.
-    controller = GameObject.Find("DayNightController").GetComponent<DayNightController>();
   }
 
   void Update()

@@ -18,14 +18,13 @@ public class Generator : MonoBehaviour {
 
 	void Awake ()
 	{
-		GenerateGraph(36);
 	}
 
 	void Update () {
 	
 	}
 
-	public void GenerateGraph(uint numberOfNodes)
+	public void GenerateGraph(int numberOfNodes)
 	{
 		// NODES
 		Nodes = new ArrayList();
