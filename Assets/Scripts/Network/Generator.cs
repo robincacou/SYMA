@@ -7,11 +7,14 @@ public class Generator : MonoBehaviour {
 	public GameObject NodesContainer;
 	public Transition TransitionPrefab;
 	public GameObject TransitionContainer;
+	public Transport TransportPrefab;
+	public GameObject TransportsContainer;
 
 	public uint unitsBetweenNodes;
 	public uint randomUnitsBetweenNodes;
 
 	private ArrayList Nodes;
+	private ArrayList Transitions;
 
 	void Awake ()
 	{
@@ -24,6 +27,7 @@ public class Generator : MonoBehaviour {
 
 	public void GenerateGraph(uint numberOfNodes)
 	{
+		// NODES
 		Nodes = new ArrayList();
 		int size = (int)Mathf.Ceil(Mathf.Sqrt(numberOfNodes));
 		for (uint i = 0; i < numberOfNodes; i++)
@@ -32,9 +36,12 @@ public class Generator : MonoBehaviour {
 			node.transform.parent = NodesContainer.transform;
 			node.transform.position = new Vector3(unitsBetweenNodes * (i % size) + Random.Range(-randomUnitsBetweenNodes, randomUnitsBetweenNodes), 0,
 			                                      unitsBetweenNodes * (i / size) + Random.Range(-randomUnitsBetweenNodes, randomUnitsBetweenNodes));
+			node.name = NameGenerator.GenerateStationName();
 			Nodes.Add(node);
 		}
 
+		// TRANSITIONS
+		Transitions = new ArrayList();
 		for (int i = 0; i < Nodes.Count; i++)
 		{
 			Node node = (Node)Nodes[i];
@@ -90,7 +97,37 @@ public class Generator : MonoBehaviour {
 
 				node.AddTransition(trans);
 				toConnect.AddTransition(trans);
+
+				Transitions.Add(trans);
 			}
+		}
+
+		// TRANSPORTS
+		int transIndex = 0;
+		while (transIndex < Transitions.Count)
+		{
+			Transport newTransport = (Transport)Instantiate(TransportPrefab);
+			newTransport.transform.parent = TransportsContainer.transform;
+
+			int journeySize = Random.Range(2, 9);
+			newTransport.Journey = new Node[journeySize];
+
+			Transition currentTrans = (Transition)Transitions[transIndex];
+			newTransport.Journey[0] = currentTrans.first;
+			newTransport.Journey[1] = currentTrans.second;
+
+			// Random part
+			Node toConnect = currentTrans.second;
+			for (int transNumber = 2; transNumber < journeySize; transNumber++)
+			{
+				ArrayList nodeTransitions = toConnect.GetTransitions();
+				int secondIndex = Random.Range(0, nodeTransitions.Count);
+				currentTrans = (Transition)nodeTransitions[secondIndex];
+				toConnect = currentTrans.GetOther(newTransport.Journey[transNumber - 1]);
+				newTransport.Journey[transNumber] = toConnect;
+			}
+
+			transIndex++;
 		}
 	}
 

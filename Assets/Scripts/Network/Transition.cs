@@ -56,4 +56,14 @@ public class Transition : MonoBehaviour
 
 		GetComponent<LineRenderer>().material = safe;
 	}
+
+	public Node GetOther(Node node)
+	{
+		if (first == node)
+			return second;
+		if (second == node)
+			return first;
+		Debug.LogError("GetOther for " + name + " with invalid node (" + node.name + ")");
+		return null;
+	}
 }
