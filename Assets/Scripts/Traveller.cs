@@ -10,9 +10,12 @@ public class Traveller : MonoBehaviour {
 	private bool transit;
 	private Stack path;
 	private uint waitingTime;
+	private bool smartPhone;
 
 	// Use this for initialization
 	void Start () {
+		waitingTime = 0;
+		smartPhone = false;
 	}
 	
 	// Update is called once per frame
@@ -36,8 +39,17 @@ public class Traveller : MonoBehaviour {
 
 	public bool StayInTransport(Node curr, Node next)
 	{
-		path.Pop();
 		current = curr;
+
+		if (smartPhone)
+		{
+			Stack tmppath = FindObjectOfType<WorldHandler> ().AssignNewPath (current, destination);
+			if (tmppath != path) 
+				path = tmppath;
+		}
+		else
+			path.Pop();
+
 		if (path.Count != 0 && (Node)path.Peek() == next)
 			return true;
 		transit = false;
@@ -52,7 +64,7 @@ public class Traveller : MonoBehaviour {
 			Destroy (this.gameObject);
 		} else {
 			current.AddTraveller (this);
-			if (current.informationOn)
+			if (current.informationOn && !smartPhone)
 				path = FindObjectOfType<WorldHandler> ().AssignNewPath(current, destination);
 		}
 	}
@@ -77,7 +89,17 @@ public class Traveller : MonoBehaviour {
 	public void CheckingWaitingTime(Transition t)
 	{
 		++waitingTime;
-		path = FindObjectOfType<WorldHandler> ().AssignNewWaitingPath (current, destination, waitingTime, current.informationOn, t);
+		if (waitingTime % 3 == 0)
+		{
+			Node next = (Node) path.Peek ();
+			if (smartPhone)
+				path = FindObjectOfType<WorldHandler> ().AssignNewWaitingPath (current, destination, waitingTime, true, t);
+			else
+				path = FindObjectOfType<WorldHandler> ().AssignNewWaitingPath (current, destination, waitingTime, current.informationOn, t);
+
+			if (next != path.Peek())
+				waitingTime = 0;
+		}
 	}
 
 	public void SetStack(Stack S)
@@ -108,6 +130,16 @@ public class Traveller : MonoBehaviour {
 	public uint GetWaitingTime()
 	{
 		return waitingTime;
+	}
+
+	public bool GetSmartPhone()
+	{
+		return smartPhone;
+	}
+
+	public void SetSmartPhone(bool b)
+	{
+		smartPhone = b;
 	}
 
 
