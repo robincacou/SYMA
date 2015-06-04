@@ -7,33 +7,50 @@ public class WorldHandler : MonoBehaviour {
 
 	public GameObject NodesGO;
 	public GameObject TransitionsGO;
+	public GameObject TransportsGO;
 
 	public Traveller TravellerPrefab;
 	public GameObject TravellersContainer;
 	public uint capacity;
-
+	
 	public Text numberOfTravellers;
 
 	private Node[] nodes;
 	private Transition[] transitions;
-	private ArrayList travellers;
-	private Dictionary<Node, Dictionary<Node, Node>> UnAlteredPaths;
+	private Transport[] transports;
+	private ArrayList smartPhonetravellers;
 
+	private Dictionary<Node, Dictionary<Node, Node>> UnAlteredPaths;
+	private Dictionary<Node, Dictionary<Node, Node>> AlteredPaths;
+	private Dictionary<KeyValuePair<KeyValuePair<Node, Transition>, KeyValuePair<uint, bool>>, Dictionary<Node, Node>> WaitingPaths;
+
+	private float timeMultiplier = 0f;
 	private uint totalTravellersNumber = 0;
 	private uint currentTravellersNumber = 0;
 
-	void Start()
+	void Awake()
 	{
 		nodes = NodesGO.GetComponentsInChildren<Node>();
 		transitions = TransitionsGO.GetComponentsInChildren<Transition>();
+		transports = TransportsGO.GetComponentsInChildren<Transport>();
+	}
 
+	void Start()
+	{
 		AssignTransitionsToNodes();
 		AssignCapacityToNodes ();
 
+		smartPhonetravellers = new ArrayList ();
 		UnAlteredPaths = new Dictionary<Node, Dictionary<Node, Node>> ();
+		AlteredPaths = new Dictionary<Node, Dictionary<Node, Node>> ();
+		WaitingPaths = new Dictionary<KeyValuePair<KeyValuePair<Node, Transition>, KeyValuePair<uint, bool>>, Dictionary<Node, Node>> ();
 
 		foreach (Node node in nodes)
-			UnAlteredPaths[node] = Dijkstra(node, false);
+		{
+			if (node.informationOn)
+				AlteredPaths[node] = Dijkstra(node, true);
+			UnAlteredPaths [node] = Dijkstra (node, false);
+		}
 	}
 
 	void Update ()
@@ -126,7 +143,7 @@ public class WorldHandler : MonoBehaviour {
 		return prev;
 	}
 
-	public Stack findSeq(Node destination, Dictionary<Node, Node> prev)
+	private Stack findSeq(Node destination, Dictionary<Node, Node> prev)
 	{
 		Stack S = new Stack();
 		Node u = destination;
@@ -136,6 +153,28 @@ public class WorldHandler : MonoBehaviour {
 			u = prev[u];                         // Traverse from target to source
 		}
 		return S;
+	}
+
+	public Stack AssignNewPath(Node start, Node dest)
+	{
+		return findSeq (dest, AlteredPaths[start]);
+	}
+
+	public void UpdateWeights()
+	{
+		WaitingPaths.Clear ();
+		foreach (Node node in nodes)
+		{
+			AlteredPaths[node] = Dijkstra(node, true);
+			if (node.informationOn)
+				node.InformTravellers();
+		}
+
+		foreach(Traveller t in smartPhonetravellers)
+		{
+			t.SetWaitingTime(0);
+			t.SetStack(AssignNewPath(t.GetCurrent(), t.GetDestination()));
+		}
 	}
 
 	public void SpawnTraveller()
@@ -165,24 +204,17 @@ public class WorldHandler : MonoBehaviour {
 			curr.SetPosOfNextTraveller (0, p.y + 1);
 
 		//travellers.Add(trav);
-		trav.SetStack((Stack) findSeq(trav.GetDestination(), UnAlteredPaths[trav.GetCurrent()]));
+		if (trav.GetCurrent().informationOn)
+			trav.SetStack((Stack) findSeq(trav.GetDestination(), AlteredPaths[trav.GetCurrent()]));
+		else
+			trav.SetStack((Stack) findSeq(trav.GetDestination(), UnAlteredPaths[trav.GetCurrent()]));
 		curr.travellers.Add (trav);
 
-		/*if (curr.travellers.Count > capacity / trav.transform.localScale.x)
+		if (currentTravellersNumber % 5 == 0)
 		{
-			curr.SetPosOfNextTraveller(0, 0);
-			foreach(Traveller t in curr.travellers)
-			{
-				p = curr.GetPosOfNextTraveller ();
-				t.transform.localScale = new Vector3(t.transform.localScale.x / 2, t.transform.localScale.y / 2, t.transform.localScale.z / 2);
-				t.transform.position = new Vector3 (curr.transform.position.x + 2 +  p.x * t.transform.localScale.x * 2, 5,
-				                                       curr.transform.position.z + p.y * t.transform.localScale.y * 2);
-				if (p.x < Mathf.Sqrt(capacity) - 1)
-					curr.SetPosOfNextTraveller (p.x + 1, p.y);
-				else
-					curr.SetPosOfNextTraveller (0, p.y + 1);
-			}
-		}*/
+			trav.SetSmartPhone (true);
+			smartPhonetravellers.Add (trav);
+		}
 
 		totalTravellersNumber++;
 		currentTravellersNumber++;
@@ -191,5 +223,77 @@ public class WorldHandler : MonoBehaviour {
 	public void OnTravellerLeaves()
 	{
 		currentTravellersNumber--;
+	}
+
+	public void setTimeMultiplier(float mult)
+	{
+		timeMultiplier = mult;
+		foreach(Transport trans in transports)
+			trans.setTimeMultiplier(mult);
+	}
+
+	public Dictionary<Node, Node> SpecialDijkstra(Node start, bool updateOn, Transition trans, uint waitingTime)
+	{
+		Dictionary<Node, uint> dist = new Dictionary<Node, uint>();
+		Dictionary<Node, Node> prev = new Dictionary<Node, Node>();
+		ArrayList Q = new ArrayList();
+		
+		dist[start] = 0;                       // Distance from source to source
+		prev[start] = null;               // Previous node in optimal path initialization
+		
+		
+		foreach(Node v in nodes)  // Initialization
+		{
+			if (v != start)            // Where v has not yet been removed from Q (unvisited nodes)
+			{
+				dist[v] = 600000;             // Unknown distance function from source to v
+				prev[v] = null;            	// Previous node in optimal path from source
+			}
+			Q.Add(v); // All nodes initially in Q (unvisited nodes)
+		}
+		
+		while(Q.Count != 0)
+		{
+			Node u = (Node) Q[0];
+			foreach(Node vertex in Q)
+			{
+				if (dist[vertex] < dist[u])
+					u = vertex;
+			}
+			// Source node in first case
+			Q.Remove(u);
+			
+			foreach(Transition t in u.GetTransitions())
+			{
+				Node v;
+				if (u == t.first)
+					v = t.second; // where v is still in Q.
+				else
+					v = t.first;
+				
+				uint alt = dist[u] + t.initialWeight;
+				if(updateOn)
+					alt += t.alteredWeight;
+				if (t == trans)
+					alt += (waitingTime/10) * t.initialWeight;
+				if(alt < dist[v])               // A shorter path to v has been found
+				{
+					dist[v] = alt;
+					prev[v] = u;
+				}
+			}
+		}
+		return prev;
+	}
+
+	public Stack AssignNewWaitingPath(Node start, Node dest, uint wait, bool updateOn, Transition trans)
+	{
+		KeyValuePair<Node, Transition> pair1 = new KeyValuePair<Node, Transition> (start, trans);
+		KeyValuePair<uint, bool> pair2 = new KeyValuePair<uint, bool> (wait, updateOn);
+
+		KeyValuePair<KeyValuePair<Node, Transition>, KeyValuePair<uint, bool>> pair = new KeyValuePair<KeyValuePair<Node, Transition>, KeyValuePair<uint, bool>> (pair1, pair2);
+		if (!WaitingPaths.ContainsKey(pair))
+			WaitingPaths [pair] = SpecialDijkstra (start, updateOn, trans, wait);
+		return findSeq (dest, WaitingPaths [pair]);
 	}
 }

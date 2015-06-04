@@ -9,9 +9,13 @@ public class Traveller : MonoBehaviour {
 	private Node current;
 	private bool transit;
 	private Stack path;
+	private uint waitingTime;
+	private bool smartPhone;
 
 	// Use this for initialization
 	void Start () {
+		waitingTime = 0;
+		smartPhone = false;
 	}
 	
 	// Update is called once per frame
@@ -35,8 +39,12 @@ public class Traveller : MonoBehaviour {
 
 	public bool StayInTransport(Node curr, Node next)
 	{
-		path.Pop();
 		current = curr;
+		path.Pop();
+
+		if (smartPhone && current != destination)
+			path = FindObjectOfType<WorldHandler> ().AssignNewPath (current, destination);
+
 		if (path.Count != 0 && (Node)path.Peek() == next)
 			return true;
 		transit = false;
@@ -46,17 +54,19 @@ public class Traveller : MonoBehaviour {
 
 	public void OnTransportArrived()
 	{
-		if (current == destination)
-		{
-			FindObjectOfType<WorldHandler>().OnTravellerLeaves();
+		if (current == destination) {
+			FindObjectOfType<WorldHandler> ().OnTravellerLeaves ();
 			Destroy (this.gameObject);
-		}
-		else
+		} else {
 			current.AddTraveller (this);
+			if (current.informationOn && !smartPhone)
+				path = FindObjectOfType<WorldHandler> ().AssignNewPath(current, destination);
+		}
 	}
 
 	public void OnEmbark()
 	{
+		waitingTime = 0;
 		current.RemoveTraveller (this);
 	}
 
@@ -69,6 +79,22 @@ public class Traveller : MonoBehaviour {
 			return true;
 		}
 		return false;
+	}
+
+	public void CheckingWaitingTime(Transition t)
+	{
+		++waitingTime;
+		if (waitingTime % 3 == 0)
+		{
+			Node next = (Node) path.Peek ();
+			if (smartPhone)
+				path = FindObjectOfType<WorldHandler> ().AssignNewWaitingPath (current, destination, waitingTime, true, t);
+			else
+				path = FindObjectOfType<WorldHandler> ().AssignNewWaitingPath (current, destination, waitingTime, current.informationOn, t);
+
+			if (next != path.Peek())
+				waitingTime = 0;
+		}
 	}
 
 	public void SetStack(Stack S)
@@ -90,4 +116,26 @@ public class Traveller : MonoBehaviour {
 	{
 		return path;
 	}
+
+	public void SetWaitingTime(uint i)
+	{
+		waitingTime = i;
+	}
+
+	public uint GetWaitingTime()
+	{
+		return waitingTime;
+	}
+
+	public bool GetSmartPhone()
+	{
+		return smartPhone;
+	}
+
+	public void SetSmartPhone(bool b)
+	{
+		smartPhone = b;
+	}
+
+
 }

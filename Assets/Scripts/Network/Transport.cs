@@ -10,11 +10,12 @@ public class Transport : MonoBehaviour
 	private Node current;
 	private Node destination;
 	private Transition currentTrans;
-	private float speed;
+	private float timeToDestination;
 	private int capacity = 10;
 	private ArrayList travellers;
 
 	private bool initialized;
+	private float timeMultiplier;
 
 	void Start()
 	{
@@ -39,7 +40,11 @@ public class Transport : MonoBehaviour
 			initialized = true;
 		}
 
-		transform.position = Vector3.MoveTowards(transform.position, destination.transform.position, speed * Time.deltaTime);
+		// float percentage = Vector3.Distance(current.transform.position, transform.position) / Vector3.Distance(current.transform.position, destination.transform.position);
+
+		float speed = Vector3.Distance(current.transform.position, destination.transform.position) / timeToDestination;
+	
+		transform.position = Vector3.MoveTowards(transform.position, destination.transform.position, speed * timeMultiplier * Time.deltaTime);
 		if (transform.position == destination.transform.position)
 		{
 			current = destination;
@@ -76,6 +81,7 @@ public class Transport : MonoBehaviour
 
 			//EMBARK
 			ArrayList travellersToEmbark = new ArrayList();
+			bool capaEncountered = false;
 			if (travellers.Count < capacity)
 			{
 				foreach(Traveller t in current.GetTravellers())
@@ -85,6 +91,7 @@ public class Transport : MonoBehaviour
 					if (travellers.Count + travellersToEmbark.Count >= capacity)
 					{
 						//print("MAX CAPACITY ENCOUNTERED");
+						capaEncountered = true;
 						break;
 					}
 				}
@@ -98,16 +105,28 @@ public class Transport : MonoBehaviour
 			}
 			else
 			{
+				capaEncountered = true;
 				// print("MAX CAPACITY ENCOUNTERED");
 			}
 
 			travellersToEmbark.Clear();
 
 			UpdateTransAndSpeed();
+
+
+			if (capaEncountered)
+			{
+				foreach(Traveller t in current.GetTravellers())
+				{
+					if (t.GetStack().Peek() == destination)
+						t.CheckingWaitingTime(currentTrans);
+				}
+			}
+
 		}
 	}
 
-	void UpdateTransAndSpeed()
+	private void UpdateTransAndSpeed()
 	{
 		currentTrans = null;
 		foreach(Transition trans in current.GetTransitions())
@@ -121,6 +140,11 @@ public class Transport : MonoBehaviour
 		if (currentTrans == null)
 			Debug.LogError("NO VALID TRANSITION for " + name);
 		
-		speed = currentTrans.initialWeight; // + alteredWeight
+		timeToDestination = currentTrans.initialWeight + currentTrans.alteredWeight;
+	}
+
+	public void setTimeMultiplier(float mult)
+	{
+		timeMultiplier = 12 * mult;
 	}
 }
