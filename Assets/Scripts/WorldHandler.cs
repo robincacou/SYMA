@@ -55,7 +55,7 @@ public class WorldHandler : MonoBehaviour {
 
 	void Update ()
 	{
-		numberOfTravellers.text = "Travellers : " + currentTravellersNumber + " / " + totalTravellersNumber;
+		numberOfTravellers.text = "Travelers : " + currentTravellersNumber + " / " + totalTravellersNumber;
 
 		// DEBUG
 		if (Input.GetKeyDown(KeyCode.T))
