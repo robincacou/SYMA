@@ -201,6 +201,8 @@ public class WorldHandler : MonoBehaviour {
 
 	public Stack AssignNewPath(Node start, Node dest)
 	{
+		if (!AlteredPaths.ContainsKey(start))
+			AlteredPaths[start] = Dijkstra(start, true);
 		return findSeq (dest, AlteredPaths[start]);
 	}
 
@@ -220,9 +222,6 @@ public class WorldHandler : MonoBehaviour {
 		foreach(Traveller t in smartPhonetravellers)
 		{
 			t.SetWaitingTime(0);
-			if (!AlteredPaths.ContainsKey(t.GetCurrent()))
-				AlteredPaths[t.GetCurrent()] = Dijkstra(t.GetCurrent(), true);
-
 			t.SetStack(AssignNewPath(t.GetCurrent(), t.GetDestination()));
 		}
 	}
