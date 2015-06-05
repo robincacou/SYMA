@@ -13,6 +13,7 @@ public class Traveller : MonoBehaviour {
 	private Stack path;
 	private uint waitingTime;
 	private bool smartPhone;
+	private WorldHandler w;
 
 	void Awake()
 	{
@@ -23,6 +24,7 @@ public class Traveller : MonoBehaviour {
 	void Start ()
 	{
 		waitingTime = 0;
+		w = FindObjectOfType<WorldHandler> ();
 	}
 	
 	// Update is called once per frame
@@ -50,7 +52,7 @@ public class Traveller : MonoBehaviour {
 		path.Pop();
 
 		if (smartPhone && current != destination)
-			path = FindObjectOfType<WorldHandler> ().AssignNewPath (current, destination);
+			path = w.AssignNewPath (current, destination);
 
 		if (path.Count != 0 && (Node)path.Peek() == next)
 			return true;
@@ -73,12 +75,12 @@ public class Traveller : MonoBehaviour {
 					foreach(Node n in path)
 						print("STACK: " + n.name);
 			}*/
-			FindObjectOfType<WorldHandler> ().OnTravellerLeaves ();
+			w.OnTravellerLeaves ();
 			Destroy (this.gameObject);
 		} else {
 			current.AddTraveller (this);
 			if (current.informationOn && !smartPhone)
-				path = FindObjectOfType<WorldHandler> ().AssignNewPath(current, destination);
+				path = w.AssignNewPath(current, destination);
 		}
 	}
 
@@ -92,7 +94,7 @@ public class Traveller : MonoBehaviour {
 	{
 		if (path.Count == 0 || current == destination) {
 			current.RemoveTraveller(this);
-			FindObjectOfType<WorldHandler> ().OnTravellerLeaves ();
+			w.OnTravellerLeaves ();
 			//print("ERROR IN SHOULDIGOINTRANSPORT");
 			Destroy (this.gameObject);
 			return false;
@@ -117,9 +119,9 @@ public class Traveller : MonoBehaviour {
 				print (n.name);*/
 
 			if (smartPhone)
-				path = FindObjectOfType<WorldHandler> ().AssignNewWaitingPath (current, destination, true, t);
+				path = w.AssignNewWaitingPath (current, destination, true, t);
 			else
-				path = FindObjectOfType<WorldHandler> ().AssignNewWaitingPath (current, destination, current.informationOn, t);
+				path = w.AssignNewWaitingPath (current, destination, current.informationOn, t);
 
 			if (next != path.Peek())
 				waitingTime = 0;

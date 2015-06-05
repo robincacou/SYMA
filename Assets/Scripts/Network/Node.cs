@@ -14,6 +14,7 @@ public class Node : MonoBehaviour
 	public GameObject meshContainer;
 	public GameObject smallMesh;
 	public GameObject bigMesh;
+	private WorldHandler w;
 
 	void Awake()
 	{
@@ -22,6 +23,12 @@ public class Node : MonoBehaviour
 		posOfNextTraveller = new Vector2 (0, 0);
 
 		UpdateMesh();
+
+	}
+
+	void Start()
+	{
+		w = FindObjectOfType<WorldHandler> ();
 	}
 
 	void Update()
@@ -64,7 +71,7 @@ public class Node : MonoBehaviour
 			if (!t.GetSmartPhone())
 			{
 				t.SetWaitingTime(0);
-				t.SetStack(FindObjectOfType<WorldHandler> ().AssignNewPath(this, t.GetDestination()));
+				t.SetStack(w.AssignNewPath(this, t.GetDestination()));
 			}
 		}
 	}
