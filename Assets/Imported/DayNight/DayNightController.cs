@@ -26,6 +26,7 @@ public class DayNightController : MonoBehaviour
 	public WorldHandler world;
 
 	private int minutesForTraveller = 10;
+	private bool spawning = true;
 	private int curMinutesForTraveller;
 
 	private float totalTime = 0f;
@@ -149,16 +150,20 @@ public class DayNightController : MonoBehaviour
 
 	public void setSpawnRate(float rate)
 	{
+		spawning = (rate > 0);
 		minutesForTraveller = 10 - (int)rate;
 	}
 
 	private void Tick(int minutes)
 	{
-		curMinutesForTraveller -= minutes;
-		if (curMinutesForTraveller < 0)
+		if (spawning)
 		{
-			world.SpawnTraveller();
-			curMinutesForTraveller = minutesForTraveller;
+			curMinutesForTraveller -= minutes;
+			if (curMinutesForTraveller < 0)
+			{
+				world.SpawnTraveller();
+				curMinutesForTraveller = minutesForTraveller;
+			}
 		}
 	}
 }
