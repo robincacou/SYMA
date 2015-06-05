@@ -7,7 +7,6 @@ public class SizeSelector : MonoBehaviour {
 	public Generator generator;
 	public WorldHandler world;
 	public DayNightController controller;
-	public Clock clock;
 
 	public void StartGeneration(int nodesNumber)
 	{
@@ -15,7 +14,6 @@ public class SizeSelector : MonoBehaviour {
 		canvas.gameObject.SetActive(true);
 		world.gameObject.SetActive(true);
 		controller.gameObject.SetActive(true);
-		clock.gameObject.SetActive(true);
 		gameObject.SetActive(false);
 	}
 }

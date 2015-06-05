@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Clock : MonoBehaviour
 {
   // A reference to the DayNightController script.
   public DayNightController controller;
+
+	public Text text;
 
   void Awake()
   {
@@ -13,6 +16,6 @@ public class Clock : MonoBehaviour
   {
 		float currentHour = controller.GetCurrentHour();
 		float currentMinute = controller.GetCurrentMinute();
-    gameObject.GetComponent<GUIText>().text = Mathf.Floor(currentHour).ToString() + "h" + Mathf.Floor(currentMinute).ToString();
+    	text.text = Mathf.Floor(currentHour).ToString() + ":" + Mathf.Floor(currentMinute).ToString();
   }
 }
