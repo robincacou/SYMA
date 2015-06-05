@@ -31,15 +31,18 @@ public class NoClipFirstPersonController : MonoBehaviour {
 			// Running
 			sideMovement = Input.GetAxis(verticalAxis) * movementSideMultiplier * runningMultiplier * Time.deltaTime;
 			horizontalMovement = Input.GetAxis(horizontalAxis) * movementForwardMultiplier * runningMultiplier * Time.deltaTime;
+			
+			zoom = Input.GetAxis("Mouse ScrollWheel") * zoomMultiplier * runningMultiplier * Time.deltaTime;
 		}
 		else
 		{
 			sideMovement = Input.GetAxis(verticalAxis) * movementSideMultiplier * Time.deltaTime;
 			horizontalMovement = Input.GetAxis(horizontalAxis) * movementSideMultiplier * Time.deltaTime;
+			
+			zoom = Input.GetAxis("Mouse ScrollWheel") * zoomMultiplier * Time.deltaTime;
 		}
     	
-		
-		zoom = Input.GetAxis("Mouse ScrollWheel") * zoomMultiplier * Time.deltaTime;
+
 
 		Vector3 movementDelta = new Vector3(horizontalMovement, sideMovement, zoom);
     	transform.position += transform.TransformDirection(movementDelta);
