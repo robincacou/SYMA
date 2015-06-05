@@ -22,7 +22,7 @@ public class WorldHandler : MonoBehaviour {
 
 	private Dictionary<Node, Dictionary<Node, Node>> UnAlteredPaths;
 	private Dictionary<Node, Dictionary<Node, Node>> AlteredPaths;
-	private Dictionary<KeyValuePair<KeyValuePair<Node, Transition>, KeyValuePair<uint, bool>>, Dictionary<Node, Node>> WaitingPaths;
+	private Dictionary<KeyValuePair<KeyValuePair<Node, Transition>, bool>, Dictionary<Node, Node>> WaitingPaths;
 
 	private float timeMultiplier = 0f;
 	private uint totalTravellersNumber = 0;
@@ -43,7 +43,7 @@ public class WorldHandler : MonoBehaviour {
 		smartPhonetravellers = new ArrayList ();
 		UnAlteredPaths = new Dictionary<Node, Dictionary<Node, Node>> ();
 		AlteredPaths = new Dictionary<Node, Dictionary<Node, Node>> ();
-		WaitingPaths = new Dictionary<KeyValuePair<KeyValuePair<Node, Transition>, KeyValuePair<uint, bool>>, Dictionary<Node, Node>> ();
+		WaitingPaths = new Dictionary<KeyValuePair<KeyValuePair<Node, Transition>, bool>, Dictionary<Node, Node>> ();
 
 		foreach (Node node in nodes)
 		{
@@ -282,7 +282,7 @@ public class WorldHandler : MonoBehaviour {
 			trans.setTimeMultiplier(mult);
 	}
 
-	public Dictionary<Node, Node> SpecialDijkstra(Node start, bool updateOn, Transition trans, uint waitingTime)
+	public Dictionary<Node, Node> SpecialDijkstra(Node start, bool updateOn, Transition trans)
 	{	
 		Dictionary<Node, uint> dist = new Dictionary<Node, uint>();
 		Dictionary<Node, Node> prev = new Dictionary<Node, Node>();
@@ -335,7 +335,7 @@ public class WorldHandler : MonoBehaviour {
 				if(updateOn)
 					alt += t.alteredWeight;
 				if (t == trans)
-					alt += (waitingTime/10) * t.initialWeight;
+					alt += 1000;
 
 				if(alt < dist[v])               // A shorter path to v has been found
 				{
@@ -363,14 +363,18 @@ public class WorldHandler : MonoBehaviour {
 		return prev;
 	}
 
-	public Stack AssignNewWaitingPath(Node start, Node dest, uint wait, bool updateOn, Transition trans)
+	public Stack AssignNewWaitingPath(Node start, Node dest, bool updateOn, Transition trans)
 	{
 		KeyValuePair<Node, Transition> pair1 = new KeyValuePair<Node, Transition> (start, trans);
-		KeyValuePair<uint, bool> pair2 = new KeyValuePair<uint, bool> (wait, updateOn);
 
-		KeyValuePair<KeyValuePair<Node, Transition>, KeyValuePair<uint, bool>> pair = new KeyValuePair<KeyValuePair<Node, Transition>, KeyValuePair<uint, bool>> (pair1, pair2);
+		KeyValuePair<KeyValuePair<Node, Transition>, bool> pair = new KeyValuePair<KeyValuePair<Node, Transition>, bool> (pair1, updateOn);
 		if (!WaitingPaths.ContainsKey(pair))
-			WaitingPaths [pair] = SpecialDijkstra (start, updateOn, trans, wait);
-		return findSeq (dest, WaitingPaths [pair]);
+			WaitingPaths [pair] = SpecialDijkstra (start, updateOn, trans);
+
+		Stack s = findSeq (dest, WaitingPaths [pair]);
+		print("NEW PATH");
+		foreach (Node n in s)
+			print (n.name);
+		return s;
 	}
 }

@@ -56,13 +56,16 @@ public class Traveller : MonoBehaviour {
 	{
 		if (current == destination || path.Count == 0)
 		{
-			if ((path.Count != 0 && current == destination) || (path.Count == 0 && current != destination))
+			/*if ((path.Count != 0 && current == destination) || (path.Count == 0 && current != destination))
 			{
 				print("ERROR IN TRANSPORTARRIVED");
 				print("PATH COUNT: " + path.Count);
 				print("SMARTPHONE: " + smartPhone);
 				print("CURRENT " + current.name+ " Destination: " + destination.name);
-			}
+				if (path.Count != 0)
+					foreach(Node n in path)
+						print("STACK: " + n.name);
+			}*/
 			FindObjectOfType<WorldHandler> ().OnTravellerLeaves ();
 			Destroy (this.gameObject);
 		} else {
@@ -80,10 +83,10 @@ public class Traveller : MonoBehaviour {
 
 	public bool ShouldIGoInThisTransport(Node next)
 	{
-		if (path.Count == 0) {
+		if (path.Count == 0 || current == destination) {
 			current.RemoveTraveller(this);
 			FindObjectOfType<WorldHandler> ().OnTravellerLeaves ();
-			print("ERROR IN SHOULDIGOINTRANSPORT");
+			//print("ERROR IN SHOULDIGOINTRANSPORT");
 			Destroy (this.gameObject);
 			return false;
 		}
@@ -99,13 +102,17 @@ public class Traveller : MonoBehaviour {
 	public void CheckingWaitingTime(Transition t)
 	{
 		++waitingTime;
-		if (waitingTime % 3 == 0)
+		if (waitingTime > 1 && current.travellers.IndexOf(this) > 30)
 		{
 			Node next = (Node) path.Peek ();
+			/*print("ANCIENT PATH");
+			foreach (Node n in path)
+				print (n.name);*/
+
 			if (smartPhone)
-				path = FindObjectOfType<WorldHandler> ().AssignNewWaitingPath (current, destination, waitingTime, true, t);
+				path = FindObjectOfType<WorldHandler> ().AssignNewWaitingPath (current, destination, true, t);
 			else
-				path = FindObjectOfType<WorldHandler> ().AssignNewWaitingPath (current, destination, waitingTime, current.informationOn, t);
+				path = FindObjectOfType<WorldHandler> ().AssignNewWaitingPath (current, destination, current.informationOn, t);
 
 			if (next != path.Peek())
 				waitingTime = 0;
