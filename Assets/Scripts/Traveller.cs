@@ -54,7 +54,15 @@ public class Traveller : MonoBehaviour {
 
 	public void OnTransportArrived()
 	{
-		if (current == destination) {
+		if (current == destination || path.Count == 0)
+		{
+			if ((path.Count != 0 && current == destination) || (path.Count == 0 && current != destination))
+			{
+				print("ERROR IN TRANSPORTARRIVED");
+				print("PATH COUNT: " + path.Count);
+				print("SMARTPHONE: " + smartPhone);
+				print("CURRENT " + current.name+ " Destination: " + destination.name);
+			}
 			FindObjectOfType<WorldHandler> ().OnTravellerLeaves ();
 			Destroy (this.gameObject);
 		} else {
@@ -72,6 +80,13 @@ public class Traveller : MonoBehaviour {
 
 	public bool ShouldIGoInThisTransport(Node next)
 	{
+		if (path.Count == 0) {
+			current.RemoveTraveller(this);
+			FindObjectOfType<WorldHandler> ().OnTravellerLeaves ();
+			print("ERROR IN SHOULDIGOINTRANSPORT");
+			Destroy (this.gameObject);
+			return false;
+		}
 		if (path.Peek () == next)
 		{
 			transit = true;

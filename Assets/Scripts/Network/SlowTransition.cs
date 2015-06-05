@@ -4,6 +4,8 @@ using System.Collections;
 public class SlowTransition : MonoBehaviour
 {
 	private Transition trans;
+	public GameObject explosion;
+	public GameObject heal;
 
 	// Use this for initialization
 	void Start()
@@ -22,11 +24,13 @@ public class SlowTransition : MonoBehaviour
 		if (trans.alteredWeight == 0)
 		{
 			print("Slowing" + transform.parent.name);
+			Instantiate(explosion, transform.position, transform.rotation);
 			trans.SlowDown();
 		}
 		else
 		{
 			print("Healing" + transform.parent.name);
+			Instantiate(heal, transform.position, transform.rotation);
 			trans.Heal();
 		}
 		FindObjectOfType<WorldHandler> ().UpdateWeights ();

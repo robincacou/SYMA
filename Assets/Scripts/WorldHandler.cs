@@ -207,16 +207,22 @@ public class WorldHandler : MonoBehaviour {
 	public void UpdateWeights()
 	{
 		WaitingPaths.Clear ();
+		AlteredPaths.Clear ();
 		foreach (Node node in nodes)
 		{
-			AlteredPaths[node] = Dijkstra(node, true);
 			if (node.informationOn)
+			{
+				AlteredPaths[node] = Dijkstra(node, true);
 				node.InformTravellers();
+			}
 		}
 
 		foreach(Traveller t in smartPhonetravellers)
 		{
 			t.SetWaitingTime(0);
+			if (!AlteredPaths.ContainsKey(t.GetCurrent()))
+				AlteredPaths[t.GetCurrent()] = Dijkstra(t.GetCurrent(), true);
+
 			t.SetStack(AssignNewPath(t.GetCurrent(), t.GetDestination()));
 		}
 	}
