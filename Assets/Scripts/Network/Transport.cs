@@ -44,6 +44,7 @@ public class Transport : MonoBehaviour
 
 		float speed = Vector3.Distance(current.transform.position, destination.transform.position) / timeToDestination;
 	
+		transform.LookAt(destination.transform);
 		transform.position = Vector3.MoveTowards(transform.position, destination.transform.position, speed * timeMultiplier * Time.deltaTime);
 		if (transform.position == destination.transform.position)
 		{
