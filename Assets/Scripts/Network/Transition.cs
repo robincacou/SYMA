@@ -19,8 +19,15 @@ public class Transition : MonoBehaviour
 	private LineRenderer line;
 	private BoxCollider box;
 
+	private ArrayList sprites;
+	private Color currentColor;
+	private bool transitioning;
+	private int transitionIndex;
+
 	void Start()
 	{
+		sprites = new ArrayList();
+
 		line = GetComponent<LineRenderer>();
 		box = GetComponentInChildren<BoxCollider>();
 
@@ -44,25 +51,40 @@ public class Transition : MonoBehaviour
 			sprite.transform.parent = spriteContainer.transform;
 			sprite.transform.localPosition = new Vector3(0f, 0.06f, lineLength);
 			lineLength += sprite.sprite.bounds.size.x;
+			sprites.Add(sprite);
 		}
 
 		spriteContainer.transform.LookAt(second.transform);
 	}
 
-	void Update()
+	void FixedUpdate()
 	{
-
+		if (transitioning)
+		{
+			if (transitionIndex >= sprites.Count)
+			{
+				transitioning = false;
+				transitionIndex = 0;
+			}
+			else
+			{
+				SpriteRenderer renderer = (SpriteRenderer)sprites[transitionIndex];
+				renderer.color = currentColor;
+				transitionIndex++;
+			}
+		}
 	}
 
 	public void SlowDown()
 	{
-		// TODO Timer to heal ?
 		alteredWeight = 3 * initialWeight;
 
 		text.color = new Color(0, 0, 0, 255);
 		text.text = (initialWeight + alteredWeight).ToString();
 
-		GetComponent<LineRenderer>().material= destroyed;
+		StartColorTransition(new Color(255, 0, 0));
+
+		// GetComponent<LineRenderer>().material= destroyed;
 	}
 
 	public void Heal()
@@ -71,7 +93,9 @@ public class Transition : MonoBehaviour
 		text.color = new Color(255, 255, 255, 255);
 		text.text = initialWeight.ToString();
 
-		GetComponent<LineRenderer>().material = safe;
+		StartColorTransition(new Color(255, 255, 255));
+
+		// GetComponent<LineRenderer>().material = safe;
 	}
 
 	public Node GetOther(Node node)
@@ -82,5 +106,12 @@ public class Transition : MonoBehaviour
 			return first;
 		Debug.LogError("GetOther for " + name + " with invalid node (" + node.name + ")");
 		return null;
+	}
+
+	private void StartColorTransition(Color newColor)
+	{
+		transitionIndex = 0;
+		currentColor = newColor;
+		transitioning = true;
 	}
 }
