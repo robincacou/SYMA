@@ -11,11 +11,17 @@ public class Node : MonoBehaviour
 	private uint capacity;
 	public bool informationOn = true;
 
+	public GameObject meshContainer;
+	public GameObject smallMesh;
+	public GameObject bigMesh;
+
 	void Awake()
 	{
 		transitions = new ArrayList();
 		travellers = new ArrayList ();
 		posOfNextTraveller = new Vector2 (0, 0);
+
+		UpdateMesh();
 	}
 
 	void Update()
@@ -108,5 +114,11 @@ public class Node : MonoBehaviour
 			if (trans.first == other || trans.second == other)
 				return true;
 		return false;
+	}
+
+	public void UpdateMesh()
+	{
+		smallMesh.SetActive(!informationOn);
+		bigMesh.SetActive(informationOn);
 	}
 }

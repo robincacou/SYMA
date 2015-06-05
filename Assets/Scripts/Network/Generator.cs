@@ -36,6 +36,10 @@ public class Generator : MonoBehaviour {
 			node.transform.position = new Vector3(unitsBetweenNodes * (i % size) + Random.Range(-randomUnitsBetweenNodes, randomUnitsBetweenNodes), 0,
 			                                      unitsBetweenNodes * (i / size) + Random.Range(-randomUnitsBetweenNodes, randomUnitsBetweenNodes));
 			node.name = NameGenerator.GenerateStationName();
+			node.informationOn = Random.Range(0,3) == 0;
+			node.meshContainer.transform.Rotate(new Vector3(0f, Random.Range(0f, 360f), 0f));
+			node.UpdateMesh();
+
 			Nodes.Add(node);
 		}
 
