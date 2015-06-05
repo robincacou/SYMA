@@ -4,6 +4,8 @@ using System.Collections;
 public class Traveller : MonoBehaviour {
 
 	public MeshRenderer mesh;
+	public Material normal;
+	public Material phone;
 
 	private Node destination;
 	private Node current;
@@ -12,10 +14,15 @@ public class Traveller : MonoBehaviour {
 	private uint waitingTime;
 	private bool smartPhone;
 
+	void Awake()
+	{
+		SetSmartPhone(false);
+	}
+
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		waitingTime = 0;
-		smartPhone = false;
 	}
 	
 	// Update is called once per frame
@@ -150,6 +157,11 @@ public class Traveller : MonoBehaviour {
 	public void SetSmartPhone(bool b)
 	{
 		smartPhone = b;
+
+		if (smartPhone)
+			mesh.material = phone;
+		else
+			mesh.material = normal;
 	}
 
 
