@@ -128,9 +128,9 @@ public class Generator : MonoBehaviour {
 				currentTrans = (Transition)nodeTransitions[secondIndex];
 				toConnect = currentTrans.GetOther(newTransport.Journey[transNumber - 1]);
 				newTransport.Journey[transNumber] = toConnect;
-
-				newTransport.SetCapacity(Random.Range(1, 4) * 10);
 			}
+			
+			newTransport.SetCapacity(Random.Range(1, 4) * 10);
 
 			transIndex++;
 		}

@@ -4,6 +4,11 @@ using System.Collections;
 public class Transport : MonoBehaviour
 {
 	public Node[] Journey;
+	public int capacity = 10;
+
+	public GameObject busSprite;
+	public GameObject trainSprite;
+	public GameObject planeSprite;
 
 	private int currentId;
 	private bool forward;
@@ -11,7 +16,6 @@ public class Transport : MonoBehaviour
 	private Node destination;
 	private Transition currentTrans;
 	private float timeToDestination;
-	private int capacity = 10;
 	private ArrayList travellers;
 
 	private bool initialized;
@@ -151,6 +155,25 @@ public class Transport : MonoBehaviour
 
 	public void SetCapacity(int cap)
 	{
-		capacity = capacity;
+		capacity = cap;
+
+		if (capacity <= 10)
+		{
+			busSprite.SetActive(true);
+			trainSprite.SetActive(false);
+			planeSprite.SetActive(false);
+		}
+		else if (capacity <= 20)
+		{
+			busSprite.SetActive(false);
+			trainSprite.SetActive(true);
+			planeSprite.SetActive(false);
+		}
+		else
+		{
+			busSprite.SetActive(false);
+			trainSprite.SetActive(false);
+			planeSprite.SetActive(true);
+		}
 	}
 }
