@@ -371,10 +371,10 @@ public class WorldHandler : MonoBehaviour {
 		if (!WaitingPaths.ContainsKey(pair))
 			WaitingPaths [pair] = SpecialDijkstra (start, updateOn, trans);
 
-		Stack s = findSeq (dest, WaitingPaths [pair]);
+		/*Stack s = findSeq (dest, WaitingPaths [pair]);
 		print("NEW PATH");
 		foreach (Node n in s)
-			print (n.name);
-		return s;
+			print (n.name);*/
+		return findSeq (dest, WaitingPaths [pair]);
 	}
 }
