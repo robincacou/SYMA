@@ -128,15 +128,6 @@ public class DayNightController : MonoBehaviour
 		return currentHour;
 	}
 
-  public void boostSpeed()
-  {
-    timeMultiplier *= 10;
-  }
-  public void slowSpeed()
-  {
-    timeMultiplier /= 10;
-  }
-
 	public void setMultiplier(float mult)
 	{
 		if (mult == 0)

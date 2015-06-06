@@ -28,11 +28,17 @@ public class WorldHandler : MonoBehaviour {
 	private uint totalTravellersNumber = 0;
 	private uint currentTravellersNumber = 0;
 
+	
+	private AudioSource music;
+	private bool musicTransitioning = false;
+	private float musicTarget = 0.5f;
+
 	void Awake()
 	{
 		nodes = NodesGO.GetComponentsInChildren<Node>();
 		transitions = TransitionsGO.GetComponentsInChildren<Transition>();
 		transports = TransportsGO.GetComponentsInChildren<Transport>();
+		music = GetComponent<AudioSource>();
 	}
 
 	void Start()
@@ -56,6 +62,16 @@ public class WorldHandler : MonoBehaviour {
 	void Update ()
 	{
 		numberOfTravellers.text = "Travelers :\n" + currentTravellersNumber + " / " + totalTravellersNumber;
+
+		if (musicTransitioning)
+		{
+			if (music.pitch < musicTarget)
+				music.pitch += 0.005f;
+			else if (music.pitch > musicTarget)
+				music.pitch -= 0.005f;
+			else
+				musicTransitioning = false;
+		}
 
 		// DEBUG
 		if (Input.GetKeyDown(KeyCode.T))
@@ -277,6 +293,22 @@ public class WorldHandler : MonoBehaviour {
 	public void setTimeMultiplier(float mult)
 	{
 		timeMultiplier = mult;
+
+		// Set music speed (hard coded)
+		if (mult == 0f)
+			musicTarget = 0f;
+		else if (mult < 0.7f)
+			musicTarget = 0.5f;
+		else if (mult < 2f)
+			musicTarget = 0.7f;
+		else if (mult < 5f)
+			musicTarget = 0.8f;
+		else if (mult < 14f)
+			musicTarget = 0.9f;
+		else
+			musicTarget = 1f;
+		musicTransitioning = true;
+
 		foreach(Transport trans in transports)
 			trans.setTimeMultiplier(mult);
 	}
