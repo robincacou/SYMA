@@ -16,11 +16,15 @@ public class Node : MonoBehaviour
 	public GameObject bigMesh;
 	private WorldHandler w;
 
+	public GameObject hilight;
+
 	void Awake()
 	{
 		transitions = new ArrayList();
 		travellers = new ArrayList ();
 		posOfNextTraveller = new Vector2 (0, 0);
+
+		hilight.SetActive(false);
 
 		UpdateMesh();
 
@@ -34,6 +38,16 @@ public class Node : MonoBehaviour
 	void Update()
 	{
 		text.text = travellers.Count.ToString();	
+	}
+
+	void OnMouseEnter()
+	{
+		hilight.SetActive(true);
+	}
+
+	void OnMouseExit()
+	{
+		hilight.SetActive(false);
 	}
 
 	public void AddTransition(Transition trans)

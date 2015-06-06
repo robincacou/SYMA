@@ -25,12 +25,14 @@ public class SlowTransition : MonoBehaviour
 	{
 		if (trans.alteredWeight == 0)
 		{
-			Instantiate(explosion, transform.position, transform.rotation);
+			GameObject instance = (GameObject)Instantiate(explosion, transform.position, transform.rotation);
+			Destroy(instance, 5f);
 			trans.SlowDown();
 		}
 		else
 		{
-			Instantiate(heal, transform.position, transform.rotation);
+			GameObject instance = (GameObject)Instantiate(heal, transform.position, transform.rotation);
+			Destroy(instance, 5f);
 			trans.Heal();
 		}
 		w.UpdateWeights();
