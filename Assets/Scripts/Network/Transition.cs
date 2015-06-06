@@ -79,7 +79,7 @@ public class Transition : MonoBehaviour
 	{
 		alteredWeight = 3 * initialWeight;
 
-		text.color = new Color(0, 0, 0, 255);
+		text.color = new Color(0.1f, 0.1f, 0.1f, 1f);
 		text.text = (initialWeight + alteredWeight).ToString();
 
 		StartColorTransition(new Color(255, 0, 0));
@@ -90,7 +90,7 @@ public class Transition : MonoBehaviour
 	public void Heal()
 	{
 		alteredWeight = 0;
-		text.color = new Color(255, 255, 255, 255);
+		text.color = new Color(1f, 1f, 1f, 1f);
 		text.text = initialWeight.ToString();
 
 		StartColorTransition(new Color(255, 255, 255));
