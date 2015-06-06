@@ -17,6 +17,7 @@ public class Node : MonoBehaviour
 	private WorldHandler w;
 
 	public GameObject hilight;
+	public TextMesh nameText;
 
 	void Awake()
 	{
@@ -33,6 +34,7 @@ public class Node : MonoBehaviour
 	void Start()
 	{
 		w = FindObjectOfType<WorldHandler> ();
+		nameText.text = name;
 	}
 
 	void Update()

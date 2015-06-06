@@ -21,6 +21,7 @@ public class NameGenerator : MonoBehaviour {
 
 			startWithVowel = !startWithVowel;
 		}
+		res = res.Substring(0,1).ToUpper() + res.Substring(1);
 		return res;
 	}
 
@@ -51,11 +52,11 @@ public class NameGenerator : MonoBehaviour {
 			break;
 
 		case 5:
-			res = "la " + res + " ";
+			res = "La " + res + " ";
 			break;
 
 		case 6:
-			res = "le " + res + " ";
+			res = "Le " + res + " ";
 			break;
 
 		case 7:
