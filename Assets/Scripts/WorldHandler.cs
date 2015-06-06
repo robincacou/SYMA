@@ -27,7 +27,8 @@ public class WorldHandler : MonoBehaviour {
 	private float timeMultiplier = 0f;
 	private uint totalTravellersNumber = 0;
 	private uint currentTravellersNumber = 0;
-
+	private int smartphonesRate = 5;
+	private bool smartphonesActivated = true;
 	
 	private AudioSource music;
 	private bool musicTransitioning = false;
@@ -275,7 +276,7 @@ public class WorldHandler : MonoBehaviour {
 			trav.SetStack((Stack) findSeq(trav.GetDestination(), UnAlteredPaths[trav.GetCurrent()]));
 		curr.travellers.Add (trav);
 
-		if (currentTravellersNumber % 5 == 0)
+		if (smartphonesActivated && currentTravellersNumber % smartphonesRate == 0)
 		{
 			trav.SetSmartPhone (true);
 			smartPhonetravellers.Add (trav);
@@ -283,6 +284,17 @@ public class WorldHandler : MonoBehaviour {
 
 		totalTravellersNumber++;
 		currentTravellersNumber++;
+	}
+
+	public void SetSmartphonesRate(float rate)
+	{
+		if (rate == 0)
+			smartphonesActivated = false;
+		else
+		{
+			smartphonesActivated = true;
+			smartphonesRate = 6 - (int)rate;
+		}
 	}
 
 	public void OnTravellerLeaves()
