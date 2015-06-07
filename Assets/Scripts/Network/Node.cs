@@ -128,7 +128,7 @@ public class Node : MonoBehaviour
 		foreach(Traveller t in travellers)
 		{
 			Vector2 p = GetPosOfNextTraveller ();
-			t.transform.position = new Vector3 (transform.position.x + 2 +  p.x * t.transform.localScale.x * 2, 5,
+			t.transform.position = new Vector3 (transform.position.x + 2 +  p.x * t.transform.localScale.x * 2 + 3, 0,
 			                                    transform.position.z + p.y * t.transform.localScale.y * 2);
 			if (p.x < Mathf.Sqrt(capacity) - 1)
 				SetPosOfNextTraveller (p.x + 1, p.y);
