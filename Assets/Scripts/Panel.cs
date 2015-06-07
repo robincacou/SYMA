@@ -5,13 +5,23 @@ using System.Collections;
 public class Panel : MonoBehaviour {
 
 	public Text selectText;
-	public ScrollRect innerPanel;
-	public Scrollbar scrollbar;
+	public GameObject innerPanelContainer;
+	public Toggle toggle;
 
-	public void ActivateInnerPanel(bool activated)
+	private Node currentNode;
+
+	public void ActivateInnerPanel(Node current)
 	{
-		selectText.gameObject.SetActive(!activated);
-		innerPanel.gameObject.SetActive(activated);
-		scrollbar.gameObject.SetActive(activated);
+		currentNode = current;
+
+		selectText.gameObject.SetActive(currentNode == null);
+		innerPanelContainer.SetActive(currentNode != null);
+
+		toggle.isOn = currentNode.informationOn;
+	}
+
+	public void OnToggleCHange(bool value)
+	{
+		currentNode.SetInformation(value);
 	}
 }

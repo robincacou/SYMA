@@ -434,6 +434,6 @@ public class WorldHandler : MonoBehaviour {
 			selectedNode.Deselect();
 		selectedNode = node;
 
-		panel.ActivateInnerPanel(node != null);
+		panel.ActivateInnerPanel(node);
 	}
 }

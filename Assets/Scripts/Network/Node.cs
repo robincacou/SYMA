@@ -160,4 +160,10 @@ public class Node : MonoBehaviour
 		smallMesh.SetActive(!informationOn);
 		bigMesh.SetActive(informationOn);
 	}
+
+	public void SetInformation(bool info)
+	{
+		informationOn = info;
+		UpdateMesh();
+	}
 }
