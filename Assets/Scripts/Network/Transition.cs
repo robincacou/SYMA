@@ -77,7 +77,7 @@ public class Transition : MonoBehaviour
 
 	public void SlowDown()
 	{
-		alteredWeight = 3 * initialWeight;
+		alteredWeight = 4 * initialWeight;
 
 		text.color = new Color(0.1f, 0.1f, 0.1f, 1f);
 		text.text = (initialWeight + alteredWeight).ToString();

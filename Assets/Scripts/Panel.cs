@@ -8,6 +8,7 @@ public class Panel : MonoBehaviour {
 	public GameObject innerPanelContainer;
 	public Toggle toggle;
 	public GameObject parent;
+	public Text travellerButtonPrefab;
 
 	private Node currentNode;
 
@@ -19,7 +20,20 @@ public class Panel : MonoBehaviour {
 		innerPanelContainer.SetActive(currentNode != null);
 
 		if (currentNode != null)
+		{
 			toggle.isOn = currentNode.informationOn;
+
+			// Not enough time to add travelers in interface
+			/*
+			foreach (Traveller trav in currentNode.travellers)
+			{
+				Text newButton = (Text)Instantiate(travellerButtonPrefab);
+				newButton.text = trav.name;
+				newButton.GetComponentInChildren<Text>().text = trav.name;
+				newButton.transform.SetParent(parent.transform);
+			}
+			*/
+		}
 	}
 
 	public void OnToggleCHange(bool value)
