@@ -261,7 +261,7 @@ public class WorldHandler : MonoBehaviour {
 		if (curr.travellers.Count != 0)
 			trav.transform.localScale = ((Traveller) curr.travellers[0]).transform.localScale;
 
-		trav.transform.position = new Vector3 (curr.transform.position.x + 2 +  p.x * trav.transform.localScale.x * 2, 5,
+		trav.transform.position = new Vector3 (curr.transform.position.x + 2 +  p.x * trav.transform.localScale.x * 2 + 3, 0,
 		                                       curr.transform.position.z + p.y * trav.transform.localScale.y * 2);
 
 		if (p.x < Mathf.Sqrt(capacity) - 1)
@@ -269,18 +269,22 @@ public class WorldHandler : MonoBehaviour {
 		else
 			curr.SetPosOfNextTraveller (0, p.y + 1);
 
+		if (smartphonesActivated && currentTravellersNumber % smartphonesRate == 0)
+		{
+			trav.SetSmartPhone (true);
+			smartPhonetravellers.Add (trav);
+			if (!AlteredPaths.ContainsKey(trav.GetCurrent()))
+				AlteredPaths[trav.GetCurrent()] = Dijkstra(trav.GetCurrent(), true);
+		}
+
 		//travellers.Add(trav);
-		if (trav.GetCurrent().informationOn)
+		if (trav.GetCurrent().informationOn || trav.GetSmartPhone())
 			trav.SetStack((Stack) findSeq(trav.GetDestination(), AlteredPaths[trav.GetCurrent()]));
 		else
 			trav.SetStack((Stack) findSeq(trav.GetDestination(), UnAlteredPaths[trav.GetCurrent()]));
 		curr.travellers.Add (trav);
 
-		if (smartphonesActivated && currentTravellersNumber % smartphonesRate == 0)
-		{
-			trav.SetSmartPhone (true);
-			smartPhonetravellers.Add (trav);
-		}
+
 
 		totalTravellersNumber++;
 		currentTravellersNumber++;
