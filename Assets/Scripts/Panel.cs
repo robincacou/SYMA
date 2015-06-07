@@ -7,6 +7,7 @@ public class Panel : MonoBehaviour {
 	public Text selectText;
 	public GameObject innerPanelContainer;
 	public Toggle toggle;
+	public GameObject parent;
 
 	private Node currentNode;
 
@@ -17,7 +18,8 @@ public class Panel : MonoBehaviour {
 		selectText.gameObject.SetActive(currentNode == null);
 		innerPanelContainer.SetActive(currentNode != null);
 
-		toggle.isOn = currentNode.informationOn;
+		if (currentNode != null)
+			toggle.isOn = currentNode.informationOn;
 	}
 
 	public void OnToggleCHange(bool value)

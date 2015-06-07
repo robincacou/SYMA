@@ -25,6 +25,8 @@ public class Traveller : MonoBehaviour {
 	{
 		waitingTime = 0;
 		w = FindObjectOfType<WorldHandler> ();
+
+		name = NameGenerator.GenerateName() + " " + NameGenerator.GenerateName();
 	}
 	
 	// Update is called once per frame

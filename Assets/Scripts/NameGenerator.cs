@@ -9,7 +9,7 @@ public class NameGenerator : MonoBehaviour {
 
 	public static string GenerateName()
 	{
-		int nameSize = Random.Range(5, 12);
+		int nameSize = Random.Range(4, 6);
 		bool startWithVowel = Random.Range(0, 2) == 1;
 		string res = "";
 		for (int i = 0; i < nameSize; i++)
