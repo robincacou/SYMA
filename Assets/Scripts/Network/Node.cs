@@ -19,6 +19,8 @@ public class Node : MonoBehaviour
 	public GameObject hilight;
 	public TextMesh nameText;
 
+	private bool isSelected = false;
+
 	void Awake()
 	{
 		transitions = new ArrayList();
@@ -39,6 +41,8 @@ public class Node : MonoBehaviour
 
 	void Update()
 	{
+		if (isSelected)
+			hilight.SetActive(true);
 		text.text = travellers.Count.ToString();	
 	}
 
@@ -49,6 +53,18 @@ public class Node : MonoBehaviour
 
 	void OnMouseExit()
 	{
+		hilight.SetActive(false);
+	}
+
+	void OnMouseDown()
+	{
+		w.SetSelectedNode(this);
+		isSelected = true;
+	}
+
+	public void Deselect()
+	{
+		isSelected = false;
 		hilight.SetActive(false);
 	}
 

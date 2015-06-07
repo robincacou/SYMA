@@ -14,6 +14,7 @@ public class WorldHandler : MonoBehaviour {
 	public uint capacity;
 	
 	public Text numberOfTravellers;
+	public Panel panel;
 
 	private Node[] nodes;
 	private Transition[] transitions;
@@ -33,6 +34,8 @@ public class WorldHandler : MonoBehaviour {
 	private AudioSource music;
 	private bool musicTransitioning = false;
 	private float musicTarget = 0.5f;
+
+	private Node selectedNode = null;
 
 	void Awake()
 	{
@@ -419,5 +422,14 @@ public class WorldHandler : MonoBehaviour {
 		foreach (Node n in s)
 			print (n.name);*/
 		return findSeq (dest, WaitingPaths [pair]);
+	}
+
+	public void SetSelectedNode(Node node)
+	{
+		if (selectedNode != null)
+			selectedNode.Deselect();
+		selectedNode = node;
+
+		panel.ActivateInnerPanel(node != null);
 	}
 }
