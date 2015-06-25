@@ -436,4 +436,10 @@ public class WorldHandler : MonoBehaviour {
 
 		panel.ActivateInnerPanel(node);
 	}
+
+	public void ToggleMusic()
+	{
+		AudioSource music = GetComponent<AudioSource>();
+		music.enabled = ! music.enabled;
+	}
 }
